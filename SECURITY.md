@@ -10,3 +10,5 @@ Zugangsdaten und persoenliche Daten aus der Meldung.
 
 Die Projektlizenz steht in [LICENSE](LICENSE). Der Umgang mit Nutzerdaten
 steht in [PRIVACY.md](PRIVACY.md).
+
+Tapwing befindet sich in Entwicklung. [Aktuelle Sicherheitsgrenzen](docs/PRIVACY_AND_PERMISSIONS.md).

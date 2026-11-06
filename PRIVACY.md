@@ -1,7 +1,7 @@
 # Datenschutz
 
-Tapwing benoetigt kein Konto. Die Tastatur enthaelt keine Analyse- oder
-Werbedienste und keinen Verlauf von Eingaben.
+Tapwing benoetigt kein Konto. Die Tastatur enthält keine Analyse- oder
+Werbedienste. Wörterbücher und gelernte Wörter bleiben lokal auf dem Gerät.
 
 ## Netzwerk
 
@@ -17,3 +17,12 @@ Werbedienste und keinen Verlauf von Eingaben.
 - Passwortfelder sind von Vorschlaegen, Lernfunktionen, KI und Protokollen
   ausgeschlossen.
 - Persoenliches Woerterbuch und Einstellungen bleiben auf dem Geraet.
+
+Der automatische Verlauf und Vorschläge aus der Zwischenablage sind anfangs aus.
+Automatische Zugriffe sind in Passwortfeldern, im Inkognito-Modus und in Feldern
+mit der Android-Markierung gegen personalisiertes Lernen unterdrückt.
+Manuelles Einfügen über Android bleibt möglich.
+
+Automatische Android-Sicherungen sind deaktiviert. Ein manueller Export ist in
+den Einstellungen möglich. Behandle Exporte wie persönliche Daten.
+[Berechtigungen und offene Prüfungen](docs/PRIVACY_AND_PERMISSIONS.md).
