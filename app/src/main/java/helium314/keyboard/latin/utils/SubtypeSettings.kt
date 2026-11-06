@@ -219,7 +219,9 @@ object SubtypeSettings {
     private fun getDefaultEnabledSubtypes(): List<InputMethodSubtype> {
         if (systemSubtypes.isNotEmpty()) return systemSubtypes
         val subtypes = systemLocales.mapNotNull { locale ->
-            val subtypesOfLocale = resourceSubtypesByLocale[locale]
+            // The compact German layout matches the default QWERTZ keyboard.
+            val preferredLocale = if (locale == Locale.GERMANY) Locale.GERMAN else locale
+            val subtypesOfLocale = resourceSubtypesByLocale[preferredLocale]
             // get best match
                 ?: LocaleUtils.getBestMatch(locale, resourceSubtypesByLocale.keys) {it}?.let { resourceSubtypesByLocale[it] }
             subtypesOfLocale?.firstOrNull()

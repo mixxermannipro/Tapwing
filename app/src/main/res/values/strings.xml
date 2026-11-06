@@ -9,11 +9,11 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <!-- Name of Android spell checker service. The app name should not be translated. -->
-    <string name="spell_checker_service_name">Satzfink Spell Checker</string>
+    <string name="spell_checker_service_name">Tapwing Spell Checker</string>
     <!-- Title for IME settings screen. The app name should not be translated. -->
-    <string name="ime_settings">Satzfink Settings</string>
+    <string name="ime_settings">Tapwing Settings</string>
     <!-- Title for the spell checking service settings screen. The app name should not be translated. -->
-    <string name="android_spell_checker_settings">Satzfink Spell Checker Settings</string>
+    <string name="android_spell_checker_settings">Tapwing Spell Checker Settings</string>
     <!-- Option to provide vibrate/haptic feedback on keypress -->
     <string name="vibrate_on_keypress">Vibrate on keypress</string>
     <!-- Option to provide vibrate/haptic feedback on keypress even in do not disturb mode -->
@@ -729,6 +729,7 @@ New dictionary:
     <!-- Theme name for holo white theme -->
     <string name="theme_name_holo_white" tools:keep="@string/theme_name_holo_white">Holo White</string>
     <!-- Theme name for dark theme (based on old no-border dark) -->
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphite</string>
     <string name="theme_name_dark" tools:keep="@string/theme_name_dark">Dark</string>
     <!-- Theme name for darker theme (based on old border dark), todo: re-consider that stupid name -->
     <string name="theme_name_darker" tools:keep="@string/theme_name_darker">Darker</string>

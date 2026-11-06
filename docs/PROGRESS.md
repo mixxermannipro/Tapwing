@@ -27,6 +27,12 @@
 - Der Android-16-Emulator setzte bei ausgeschaltetem WLAN und Mobilfunk `world` und `hallo` über Bildschirm-Wischpfade ein. Abbruch änderte das leere Feld nicht. Der gleiche deutsche Pfad erzeugte in Passwort- und Privatfeldern höchstens ein einzelnes Zeichen. Deutsche ß-Erkennung im Emulator war mit dem getesteten Pfad noch nicht zuverlässig. [Bildschirmfoto](screenshots/android-16-german-swipe.png)
 - Der automatische GitHub-Build ist in PR #4 eingerichtet. Der Zweig von PR #2 bleibt die Basis. PR #3 enthält nur die vom Issue verlangten Projektdateien für Tapwing. Beim Zusammenführen müssen die überschnittenen Projekttexte abgeglichen werden.
 
+## Gestaltung nach der Bildvorlage
+
+Der Zweig `feat/reference-keyboard` bringt das dunkle Graphit-Design, sichtbare abgerundete Tasten, Zahlenreihe, kompaktes deutsches QWERTZ und den sichtbaren Namen Tapwing in die App. [Gestaltungsdetails](REFERENCE_KEYBOARD.md)
+
+Die vorhandenen Werkzeuge sind aktiv. Die in der Vorlage sichtbaren Funktionen GIF, Übersetzung und Diktat müssen noch umgesetzt werden. Abgleich auf dem Honor-Gerät, exakte Abstände und Formate jenseits des Hochformats sind offene Prüfungen.
+
 ## Noch offen, in Reihenfolge
 
 1. **Tippqualität und Wischen absichern.** Offene Wischeingabe ist auf dem Zweig `feat/open-swipe` integriert. Prüfe echte Wischspuren für beide Sprachen und die Korrekturrate auf verschiedenen Geräten. Ergänze Abbruch bei App- und Layoutwechsel, deutsche Komposita, Sprachmischung, Umlaut und ß auf echten Geräten. Die bisherige Geräteprüfung lief mit künstlichen Touch-Ereignissen im Emulator.

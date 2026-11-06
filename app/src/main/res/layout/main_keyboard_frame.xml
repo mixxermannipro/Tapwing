@@ -65,7 +65,7 @@
 
         <ImageView
             android:id="@+id/backgroundGatheringIndicator"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/btn_keyboard_key_action_normal_lxx_base"

@@ -96,12 +96,12 @@
     <string name="settings_category_clipboard_history">Zwischenablage-Verlauf</string>
     <string name="settings_category_correction">Korrekturen</string>
     <string name="settings_category_suggestions">Vorschläge</string>
-    <string name="android_spell_checker_settings">Satzfink-Rechtschreibprüfungs-Einstellungen</string>
-    <string name="ime_settings">Satzfink-Einstellungen</string>
+    <string name="android_spell_checker_settings">Tapwing-Rechtschreibprüfungs-Einstellungen</string>
+    <string name="ime_settings">Tapwing-Einstellungen</string>
     <string name="settings_category_experimental">Experimentell</string>
     <string name="settings_no_limit">Keine Begrenzung</string>
     <string name="abbreviation_unit_minutes">%s min</string>
-    <string name="spell_checker_service_name">Satzfink-Rechtschreibprüfung</string>
+    <string name="spell_checker_service_name">Tapwing-Rechtschreibprüfung</string>
     <string name="show_emoji_key">Emoji-Taste</string>
     <string name="settings_category_input">Eingabe</string>
     <string name="settings_category_additional_keys">Zusätzliche Tasten</string>
@@ -141,6 +141,7 @@
     <string name="label_wait_key">"Warten"</string>
     <string name="prefs_always_show_suggestions">Immer Vorschläge anzeigen</string>
     <string name="internal_dictionary_summary">Internes Hauptwörterbuch</string>
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphit</string>
     <string name="theme_name_dark" tools:keep="@string/theme_name_dark">Dunkel</string>
     <string name="main_colors">Nur Hauptfarben anzeigen</string>
     <string name="up" tools:keep="@string/up">Hoch</string>
