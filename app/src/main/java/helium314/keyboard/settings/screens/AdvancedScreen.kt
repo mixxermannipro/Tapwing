@@ -50,7 +50,7 @@ import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.getActivity
 
 @Composable
-fun AdvancedSettingsScreen(
+fun AdvancedDetailsScreen(
     onClickBack: () -> Unit,
 ) {
     val prefs = LocalContext.current.prefs()

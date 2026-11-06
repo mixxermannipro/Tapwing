@@ -2,6 +2,15 @@
 package helium314.keyboard.settings.preferences
 
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import android.content.SharedPreferences
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,10 +65,16 @@ fun SwitchPreference(
     val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
     if ((b?.value ?: 0) < 0)
         Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
-    var value = prefs.getBoolean(key, default)
+    var value by remember(prefs, key, default) { mutableStateOf(prefs.getBoolean(key, default)) }
+    DisposableEffect(prefs, key, default) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, changed ->
+            if (changed == key || changed == null) value = prefs.getBoolean(key, default)
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
     fun switched(newValue: Boolean) {
         if (!allowCheckedChange(newValue)) {
-            value = !newValue
             return
         }
         value = newValue
@@ -70,12 +85,10 @@ fun SwitchPreference(
         name = name,
         onClick = { switched(!value) },
         modifier = modifier,
-        description = description
+        description = description,
+        checked = value,
     ) {
-        Switch(
-            checked = value,
-            onCheckedChange = { switched(it) },
-        )
+        SettingsSwitch(checked = value)
     }
 }
 
@@ -92,4 +105,30 @@ fun SwitchPreferenceWithEmojiDictWarning(setting: Setting, default: Boolean) {
         val message = stringResource(R.string.emoji_dictionary_required, link)
         InfoDialog(message.htmlToAnnotated(), onDismissRequest = { showWarningDialog = false })
     }
+}
+
+/** The row owns the toggle action so TalkBack exposes one control, not two. */
+@Composable
+fun SettingsSwitch(checked: Boolean, enabled: Boolean = true) {
+    Switch(
+        checked = checked,
+        onCheckedChange = null,
+        enabled = enabled,
+        thumbContent = {
+            Icon(
+                painterResource(if (checked) R.drawable.ic_setup_check else R.drawable.ic_close_rounded),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+            )
+        },
+        colors = SwitchDefaults.colors(
+            checkedTrackColor = MaterialTheme.colorScheme.primary,
+            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+            checkedIconColor = MaterialTheme.colorScheme.primary,
+            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer,
+            uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+            uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+            uncheckedIconColor = MaterialTheme.colorScheme.surfaceContainer,
+        ),
+    )
 }

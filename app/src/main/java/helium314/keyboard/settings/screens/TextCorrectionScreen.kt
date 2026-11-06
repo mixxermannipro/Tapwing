@@ -41,7 +41,7 @@ import helium314.keyboard.settings.preferences.SliderPreference
 import helium314.keyboard.settings.preferences.TextInputPreference
 
 @Composable
-fun TextCorrectionScreen(
+fun CorrectionDetailsScreen(
     onClickBack: () -> Unit,
 ) {
     val prefs = LocalContext.current.prefs()
@@ -149,7 +149,7 @@ fun createCorrectionSettings(context: Context) = listOf(
         SwitchPreference(it, Defaults.PREF_BACKSPACE_REVERTS_AUTOCORRECT)
     },
     Setting(context, Settings.PREF_AUTO_CAP,
-        R.string.auto_cap, R.string.auto_cap_summary
+        R.string.ref_auto_cap, R.string.ref_auto_cap_summary
     ) {
         SwitchPreference(it, Defaults.PREF_AUTO_CAP)
     },
@@ -176,7 +176,7 @@ fun createCorrectionSettings(context: Context) = listOf(
         SwitchPreference(it, Defaults.PREF_SHIFT_REMOVES_AUTOSPACE)
     },
     Setting(context, Settings.PREF_SHOW_SUGGESTIONS,
-        R.string.prefs_show_suggestions, R.string.prefs_show_suggestions_summary
+        R.string.ref_word_suggestions, R.string.prefs_show_suggestions_summary
     ) {
         SwitchPreference(it, Defaults.PREF_SHOW_SUGGESTIONS)
     },

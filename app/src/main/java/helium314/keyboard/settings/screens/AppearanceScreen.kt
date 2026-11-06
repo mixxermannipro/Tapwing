@@ -97,7 +97,7 @@ fun AppearanceScreen(
     )
     SearchSettingsScreen(
         onClickBack = onClickBack,
-        title = stringResource(R.string.settings_screen_appearance),
+        title = stringResource(R.string.ref_design),
         settings = items
     )
 }
@@ -306,15 +306,16 @@ fun createAppearanceSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_SPACE_BAR_TEXT, R.string.prefs_space_bar_text) {
         TextInputPreference(it, Defaults.PREF_SPACE_BAR_TEXT)
     },
-    Setting(context, SettingsWithoutKey.CUSTOM_FONT, R.string.custom_font) {
+    Setting(context, SettingsWithoutKey.CUSTOM_FONT, R.string.ref_font_style) {
         CustomFontPreference(it, Settings.getCustomFontFile(LocalContext.current), R.string.custom_font)
     },
-    Setting(context, Settings.PREF_FONT_SCALE, R.string.prefs_font_scale) { setting ->
+    Setting(context, Settings.PREF_FONT_SCALE, R.string.ref_font_size) { setting ->
         SliderPreference(
             name = setting.title,
             key = setting.key,
             default = Defaults.PREF_FONT_SCALE,
             range = 0.5f..1.5f,
+            inline = true,
             description = { "${(100 * it).toInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
@@ -330,12 +331,13 @@ fun createAppearanceSettings(context: Context) = listOf(
     Setting(context, SettingsWithoutKey.CUSTOM_EMOJI_FONT, R.string.custom_emoji_font) {
         CustomFontPreference(it, Settings.getCustomEmojiFontFile(LocalContext.current), R.string.custom_emoji_font)
     },
-    Setting(context, Settings.PREF_EMOJI_FONT_SCALE, R.string.prefs_emoji_font_scale) { setting ->
+    Setting(context, Settings.PREF_EMOJI_FONT_SCALE, R.string.ref_emoji_size) { setting ->
         SliderPreference(
             name = setting.title,
             key = setting.key,
             default = Defaults.PREF_EMOJI_FONT_SCALE,
             range = 0.5f..1.5f,
+            inline = true,
             description = { "${(100 * it).toInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },

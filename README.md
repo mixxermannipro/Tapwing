@@ -15,7 +15,7 @@ adb install app/build/outputs/apk/debug/Tapwing_0.1.0-dev-debug.apk
 
 Öffne Tapwing, aktiviere die Tastatur in den Android-Einstellungen und wähle sie als Eingabemethode. Unter „Sprachen und Layouts“ kannst du Deutsch (QWERTZ) und Englisch (QWERTY) einrichten.
 
-[Gestaltung nach Bildvorlage](docs/REFERENCE_KEYBOARD.md) · [Tests](docs/TESTING.md) · [Fortschritt](docs/PROGRESS.md) · [Datenschutz](PRIVACY.md) · [Lizenzen](docs/LICENSES.md)
+[Einstellungen nach Bildvorlage](docs/SETTINGS_REFERENCE.md) · [Gestaltung nach Bildvorlage](docs/REFERENCE_KEYBOARD.md) · [Tests](docs/TESTING.md) · [Fortschritt](docs/PROGRESS.md) · [Datenschutz](PRIVACY.md) · [Lizenzen](docs/LICENSES.md)
 
 Tapwing-eigene Beiträge stehen unter [GPL-3.0-or-later](LICENSE). Übernommene GPL-3.0-only-Dateien behalten ihre Lizenz; für die kombinierte App gilt GPLv3. Der vorhandene Tastaturcode stammt von HeliBoard, OpenBoard und AOSP LatinIME. Die Originalhinweise stehen im Quellcode und unter [docs/upstream](docs/upstream).
 

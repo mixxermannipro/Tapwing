@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.utils.BackButton
 import helium314.keyboard.latin.utils.CloseIcon
@@ -59,11 +60,15 @@ fun SearchSettingsScreen(
     onClickBack: () -> Unit,
     title: String,
     settings: List<Any?>,
+    expandedTitle: Boolean = false,
+    showSearchAction: Boolean = true,
     content: @Composable (ColumnScope.() -> Unit)? = null // overrides settings if not null
 ) {
     SearchScreen(
         onClickBack = onClickBack,
         title = { Text(title) },
+        expandedTitle = expandedTitle,
+        showSearchAction = showSearchAction,
         content = {
             if (content != null) content()
             else {
@@ -73,18 +78,7 @@ fun SearchSettingsScreen(
                     Column(
                         Modifier.verticalScroll(rememberScrollState()).then(Modifier.padding(innerPadding))
                     ) {
-                        settings.forEach {
-                            if (it is Int) {
-                                PreferenceCategory(stringResource(it))
-                            } else {
-                                // this only animates appearing prefs
-                                // a solution would be using a list(visible to key)
-                                AnimatedVisibility(visible = it != null) {
-                                    if (it != null)
-                                        SettingsActivity.settingsContainer[it]?.Preference()
-                                }
-                            }
-                        }
+                        SettingsPreferenceGroups(settings)
                     }
                     // lazyColumn has janky scroll for a while (not sure why compose gets smoother after a while)
                     // maybe related to unnecessary recompositions? but even for just displaying text it's there
@@ -119,6 +113,8 @@ fun <T: Any?> SearchScreen(
     itemContent: @Composable (T) -> Unit,
     icon: @Composable (() -> Unit)? = null,
     menu: List<Pair<String, () -> Unit>>? = null,
+    expandedTitle: Boolean = false,
+    showSearchAction: Boolean = true,
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     // searchText and showSearch should have the same remember or rememberSaveable
@@ -139,22 +135,27 @@ fun <T: Any?> SearchScreen(
                 else onClickBack()
             }
             Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MaterialTheme.colorScheme.background,
             ) {
                 Column {
                     TopAppBar(
-                        title = title,
+                        title = { if (!expandedTitle || showSearch) title() },
                         windowInsets = WindowInsets(0),
                         navigationIcon = {
-                            BackButton {
-                                if (showSearch) setShowSearch(false)
-                                else onClickBack()
+                            Surface(
+                                shape = androidx.compose.foundation.shape.CircleShape,
+                                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                                modifier = Modifier.padding(start = 12.dp),
+                            ) {
+                                BackButton {
+                                    if (showSearch) setShowSearch(false) else onClickBack()
+                                }
                             }
                         },
                         actions = {
-                            if (icon == null)
+                            if (icon == null && showSearchAction)
                                 IconButton(onClick = { setShowSearch(!showSearch) }) { SearchIcon() }
-                            else
+                            else if (icon != null)
                                 icon()
                             if (menu != null)
                                 Box {
@@ -176,6 +177,13 @@ fun <T: Any?> SearchScreen(
                                 }
                         },
                     )
+                    if (expandedTitle && !showSearch) {
+                        CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.headlineLarge.copy(
+                            fontSize = 36.sp,
+                        )) {
+                            Box(Modifier.padding(start = 24.dp, end = 24.dp, top = 72.dp, bottom = 16.dp)) { title() }
+                        }
+                    }
                     ExpandableSearchField(
                         expanded = showSearch,
                         onDismiss = { setShowSearch(false) },

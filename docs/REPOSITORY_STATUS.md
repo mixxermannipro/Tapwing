@@ -36,6 +36,6 @@ Installation und Update-Kompatibilität erhalten. Produktname ist Tapwing.
 Aktuelle Build-/Testergebnisse und verbleibende Geräteprüfungen:
 [PROGRESS.md](PROGRESS.md). Einrichtung: [tools/dev/README.md](../tools/dev/README.md).
 
-Die Fortsetzung ist als [Entwurfs-PR #6](https://github.com/mixxermannipro/Tapwing/pull/6)
-gegen main geöffnet. Die unabhängige Prüfung des neuen Deltas meldete keine Befunde;
+Die Fortsetzung ist in [PR #6](https://github.com/mixxermannipro/Tapwing/pull/6)
+gegen main dokumentiert. Der Nutzer hat das Mergen der fertig geprüften PRs freigegeben. Die unabhängige Prüfung des neuen Deltas meldete keine Befunde;
 Build- und Testergebnisse werden in PROGRESS.md fortgeschrieben.

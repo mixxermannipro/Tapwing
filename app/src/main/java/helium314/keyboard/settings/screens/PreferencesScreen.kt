@@ -23,6 +23,9 @@ import helium314.keyboard.latin.utils.locale
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.Setting
+import helium314.keyboard.settings.SettingsWithoutKey
+import helium314.keyboard.settings.SettingsDestination
+import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.ReorderSwitchPreference
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.SettingsActivity
@@ -34,7 +37,7 @@ import helium314.keyboard.settings.preferences.SwitchPreferenceWithEmojiDictWarn
 import helium314.keyboard.latin.utils.previewDark
 
 @Composable
-fun PreferencesScreen(
+fun AdditionalPreferencesScreen(
     onClickBack: () -> Unit,
 ) {
     val prefs = LocalContext.current.prefs()
@@ -43,6 +46,8 @@ fun PreferencesScreen(
         Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
     val clipboardHistoryEnabled = prefs.getBoolean(Settings.PREF_ENABLE_CLIPBOARD_HISTORY, Defaults.PREF_ENABLE_CLIPBOARD_HISTORY)
     val items = listOf(
+        SettingsWithoutKey.TOOLBAR_PAGE,
+        SettingsWithoutKey.SECONDARY_LAYOUTS,
         R.string.settings_category_input,
         Settings.PREF_SHOW_HINTS,
         if (prefs.getBoolean(Settings.PREF_SHOW_HINTS, Defaults.PREF_SHOW_HINTS))
@@ -86,12 +91,18 @@ fun PreferencesScreen(
     )
     SearchSettingsScreen(
         onClickBack = onClickBack,
-        title = stringResource(R.string.settings_screen_preferences),
+        title = stringResource(R.string.ref_more_options),
         settings = items
     )
 }
 
 fun createPreferencesSettings(context: Context) = listOf(
+    Setting(context, SettingsWithoutKey.TOOLBAR_PAGE, R.string.ref_toolbar_customize) {
+        Preference(it.title, { SettingsDestination.navigateTo(SettingsDestination.Toolbar) })
+    },
+    Setting(context, SettingsWithoutKey.SECONDARY_LAYOUTS, R.string.settings_screen_secondary_layouts) {
+        Preference(it.title, { SettingsDestination.navigateTo(SettingsDestination.Layouts) })
+    },
     Setting(context, Settings.PREF_SAVE_SUBTYPE_PER_APP, R.string.save_subtype_per_app) {
         SwitchPreference(it, Defaults.PREF_SAVE_SUBTYPE_PER_APP)
     },
@@ -128,7 +139,7 @@ fun createPreferencesSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_SHOW_EMOJI_DESCRIPTIONS, R.string.show_emoji_descriptions) {
         SwitchPreferenceWithEmojiDictWarning(it, Defaults.PREF_SHOW_EMOJI_DESCRIPTIONS)
     },
-    Setting(context, Settings.PREF_SHOW_NUMBER_ROW, R.string.number_row, R.string.number_row_summary) {
+    Setting(context, Settings.PREF_SHOW_NUMBER_ROW, R.string.ref_number_row, R.string.ref_number_row_summary) {
         SwitchPreference(it, Defaults.PREF_SHOW_NUMBER_ROW) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SHOW_NUMBER_ROW_IN_SYMBOLS, R.string.number_row_in_symbols) {
@@ -185,6 +196,7 @@ fun createPreferencesSettings(context: Context) = listOf(
                 else stringResource(R.string.abbreviation_unit_minutes, it.toString())
             },
             range = 1f..121f,
+            inline = true,
         ) { ClipboardDao.getInstance(ctx)?.clearOldClips(true) }
     },
     Setting(context, Settings.PREF_CLIPBOARD_HISTORY_PINNED_FIRST, R.string.clipboard_history_pinned_first) {

@@ -67,6 +67,8 @@ private fun createSettings(context: Context) = createAboutSettings(context) + cr
         createGestureTypingSettings(context)
 
 object SettingsWithoutKey {
+    const val TOOLBAR_PAGE = "toolbar_settings_page"
+    const val SECONDARY_LAYOUTS = "secondary_layouts_page"
     const val EDIT_PERSONAL_DICTIONARY = "edit_personal_dictionary"
     const val APP = "app"
     const val VERSION = "version"

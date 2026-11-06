@@ -16,6 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
 import helium314.keyboard.latin.settings.SettingsSubtype.Companion.toSettingsSubtype
 import helium314.keyboard.latin.settings.getTransitionAnimationScale
+import helium314.keyboard.settings.screens.*
+import helium314.keyboard.latin.R
+import androidx.compose.ui.res.stringResource
 import helium314.keyboard.settings.screens.AboutScreen
 import helium314.keyboard.settings.screens.AdvancedSettingsScreen
 import helium314.keyboard.settings.screens.AppearanceScreen
@@ -66,20 +69,20 @@ fun SettingsNavHost(
         popExitTransition = { slideOutHorizontally(targetOffsetX = { +it * dir }, animationSpec = animation) }
     ) {
         composable(SettingsDestination.Settings) {
-            MainSettingsScreen(
-                onClickAbout = { navController.navigate(SettingsDestination.About) },
-                onClickTextCorrection = { navController.navigate(SettingsDestination.TextCorrection) },
-                onClickPreferences = { navController.navigate(SettingsDestination.Preferences) },
-                onClickToolbar = { navController.navigate(SettingsDestination.Toolbar) },
-                onClickGestureTyping = { navController.navigate(SettingsDestination.GestureTyping) },
-                onClickDataGathering = { navController.navigate(SettingsDestination.DataGathering) },
-                onClickAdvanced = { navController.navigate(SettingsDestination.Advanced) },
-                onClickAppearance = { navController.navigate(SettingsDestination.Appearance) },
-                onClickLanguage = { navController.navigate(SettingsDestination.Languages) },
-                onClickLayouts = { navController.navigate(SettingsDestination.Layouts) },
-                onClickDictionaries = { navController.navigate(SettingsDestination.Dictionaries) },
-                onClickBack = ::goBack,
-            )
+            MainSettingsScreen(onNavigate = { navController.navigate(it) }, onClickBack = ::goBack)
+        }
+        composable(SettingsDestination.Clipboard) { ClipboardSettingsScreen(::goBack) }
+        composable(SettingsDestination.Privacy) { PrivacySettingsScreen(::goBack) }
+        composable(SettingsDestination.Updates) { UpdatesSettingsScreen(::goBack) }
+        composable(SettingsDestination.Emoji) { EmojiSettingsScreen(::goBack) }
+        composable(SettingsDestination.AdditionalPreferences) { AdditionalPreferencesScreen(::goBack) }
+        composable(SettingsDestination.CorrectionDetails) { CorrectionDetailsScreen(::goBack) }
+        composable(SettingsDestination.AdvancedDetails) { AdvancedDetailsScreen(::goBack) }
+        composable(SettingsDestination.Voice) {
+            PlannedFeatureScreen(stringResource(R.string.ref_voice), stringResource(R.string.ref_voice_summary), ::goBack)
+        }
+        composable(SettingsDestination.Autofill) {
+            PlannedFeatureScreen(stringResource(R.string.ref_autofill), stringResource(R.string.ref_autofill_summary), ::goBack)
         }
         composable(SettingsDestination.About) {
             AboutScreen(onClickBack = ::goBack)
@@ -146,6 +149,15 @@ fun SettingsNavHost(
 
 object SettingsDestination {
     const val Settings = "settings"
+    const val Clipboard = "clipboard"
+    const val Privacy = "privacy"
+    const val Updates = "updates"
+    const val Emoji = "emoji"
+    const val Voice = "voice"
+    const val Autofill = "autofill"
+    const val AdditionalPreferences = "additional_preferences"
+    const val CorrectionDetails = "correction_details"
+    const val AdvancedDetails = "advanced_details"
     const val About = "about"
     const val TextCorrection = "text_correction"
     const val Preferences = "preferences"

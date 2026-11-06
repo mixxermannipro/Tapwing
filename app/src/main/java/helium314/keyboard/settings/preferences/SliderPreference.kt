@@ -27,9 +27,14 @@ fun <T: Number> SliderPreference(
     default: T,
     range: ClosedFloatingPointRange<Float>,
     stepSize: Int? = null,
+    inline: Boolean = false,
     onValueChanged: (Float?) -> Unit = { },
     onConfirmed: (T) -> Unit = { },
 ) {
+    if (inline) {
+        InlineSliderPreference(name, modifier, key, description, default, range, stepSize, onValueChanged, onConfirmed)
+        return
+    }
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
     val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()

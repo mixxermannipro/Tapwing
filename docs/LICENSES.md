@@ -20,3 +20,7 @@ AndroidX, Kotlin und die übrigen Bibliotheken sind in `app/build.gradle.kts` ei
 Die geometrische Wischerkennung stammt aus [CleverKeys, Stand 6e964a5](https://github.com/tribixbite/CleverKeys/tree/6e964a571c4664a2a5a8c5138f56337cad55667d), GPL-3.0. Der übernommene Kotlin-Code und der Copyright-Hinweis liegen unter `app/src/main/java/tribixbite/cleverkeys`. Die App enthält aus CleverKeys weder Modellgewichte noch Wortlisten.
 
 `tools/generate-swipe-lexicons.py` erzeugt die komprimierten `.lex`-Dateien aus den oben genannten LatinIME-Quellwortlisten. Es entfernt markierte Nichtwörter und potenziell anstößige Einträge, lässt die Schreibweise stehen und sortiert nach Häufigkeit. `python3 tools/generate-swipe-lexicons.py --check` vergleicht die entpackten Wortlisten bytegenau. Verschiedene zlib-Versionen können dieselbe Liste unterschiedlich komprimieren.
+
+Die Compose-UI-Tests verwenden AndroidX `ui-test-junit4` und einen debug-only
+Test-Host aus `ui-test-manifest`, abgestimmt auf die bestehende Compose-BOM.
+Sie gehören zu AndroidX (Apache-2.0); die Release-App benötigt den Test-Host nicht.

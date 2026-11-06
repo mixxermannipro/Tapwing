@@ -50,6 +50,7 @@ fun CustomFontPreference(setting: Setting, fontFile: File, title: Int) {
         .setType("*/*")
     Preference(
         name = setting.title,
+        description = if (fontFile.exists()) fontFile.name else stringResource(R.string.settings_system_default),
         onClick = {
             if (fontFile.exists())
                 showDialog = true

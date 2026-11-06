@@ -6,7 +6,8 @@ Der Fortsetzungszweig `chore/cloud-continuation` basiert auf main und integriert
 die bislang getrennten Entwurfs-PRs #2, #4 und #5. main und die bisherigen
 Entwicklungszweige bleiben unverändert. [Analyse aller PRs und Issues](REPOSITORY_STATUS.md).
 Die Fortsetzung liegt in [Entwurfs-PR #6](https://github.com/mixxermannipro/Tapwing/pull/6).
-Eine Übernahme nach main und eine Veröffentlichung stehen aus.
+Der Nutzer hat die Integration und das Zusammenführen aller übernehmbaren PRs
+ausdrücklich freigegeben. Eine APK-Veröffentlichung bleibt ein separater Schritt.
 
 ## Start für Codex Cloud
 
@@ -52,6 +53,22 @@ Ergänzung bestanden alle 15 im direkten JUnit-/Robolectric-Lauf. Der reguläre
 Gradle-Gesamtlauf wird unten separat dokumentiert. Die Tests prüfen die echte
 Ergebnisfreigabe; Android-Editorgrenzen und der asynchrone Decoder sind Testdoubles.
 Sie ersetzen keinen Gerätecheck mit menschlichen Wischspuren.
+
+## Einstellungen nach der Nutzervorlage
+
+Die native Oberfläche wurde nach sechs bereitgestellten Bildern umgebaut:
+vier Hauptgruppen, Graphit-Karten, blaue Schalter, große Seitentitel und direkte
+Regler für Schrift, Emojis und Zwischenablage. Alte Optionen sind weiter erreichbar.
+Geplante Funktionen sind sichtbar deaktiviert; Datenschutzvorgaben bleiben erhalten.
+[Umsetzung und native Renderings](SETTINGS_REFERENCE.md).
+
+Der aktuelle Gesamtlauf erfasst **216 Tests: 211 bestanden, 5 bekannte Ausnahmen,
+0 Fehler**. Alle 12 neuen Compose-UI-Fälle bestanden. Debug und unsignierte
+Release-APK wurden auch mit der neuen Oberfläche gebaut. Die abschließende
+Lint-Auswertung läuft beim Sichern dieses Standes noch.
+Der zusätzliche UI-Reviewer meldete ein erreichtes Nutzungslimit; der neue
+UI-Stand wurde deshalb selbst geprüft. Die früheren unabhängigen Reviews des
+Wisch-Fixes und der präzisen Lint-Baseline bleiben dokumentiert.
 
 ## Noch offen, in Reihenfolge
 
