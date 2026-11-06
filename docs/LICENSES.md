@@ -14,3 +14,9 @@
 Alle drei Dateien ließen sich aus den jeweiligen Listen bytegenau nachbauen. Entpacke die jeweilige Liste mit `gzip -dc` und rufe `java -jar dicttool_aosp.jar makedict -s <liste.combined> -d <zieldatei.dict>` auf. [Werkzeug und Quellcode](https://github.com/remi0s/aosp-dictionary-tools/tree/1e69dd2c04258e5e9e04bfb13b46faccf6a435b0)
 
 AndroidX, Kotlin und die übrigen Bibliotheken sind in `app/build.gradle.kts` eingetragen. Eine vollständige maschinenlesbare Liste aller transitiven Bibliotheken und Hinweise steht vor einer stabilen Veröffentlichung noch aus.
+
+## Wischerkennung
+
+Die geometrische Wischerkennung stammt aus [CleverKeys, Stand 6e964a5](https://github.com/tribixbite/CleverKeys/tree/6e964a571c4664a2a5a8c5138f56337cad55667d), GPL-3.0. Der übernommene Kotlin-Code und der Copyright-Hinweis liegen unter `app/src/main/java/tribixbite/cleverkeys`. Die App enthält aus CleverKeys weder Modellgewichte noch Wortlisten.
+
+`tools/generate-swipe-lexicons.py` erzeugt die komprimierten `.lex`-Dateien aus den oben genannten LatinIME-Quellwortlisten. Es entfernt markierte Nichtwörter und potenziell anstößige Einträge, lässt die Schreibweise stehen und sortiert nach Häufigkeit. `python3 tools/generate-swipe-lexicons.py --check` vergleicht die entpackten Wortlisten bytegenau. Verschiedene zlib-Versionen können dieselbe Liste unterschiedlich komprimieren.

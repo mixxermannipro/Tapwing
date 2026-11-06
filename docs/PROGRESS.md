@@ -7,7 +7,7 @@
 1. Lies [AGENTS.md](../AGENTS.md) und prüfe `git status --short --branch`, `git fetch origin` sowie den offenen Entwurfs-PR. Checke den Zweig aus, auf dem der Quellcode liegt.
 2. Stelle ein vollständiges JDK 17, Android SDK 37.2, Build-Tools 36.0.0 und NDK 28.2.13676358 bereit. Der Wrapper lädt die festgelegte Gradle-Version mit Prüfsumme. Auf dem bisherigen Rechner lag das SDK unter `~/Android/sdk` und das JDK im Gradle-Verzeichnis `~/.gradle/jdks`. Die Pfade sind lokal und dürfen nicht fest im Projekt stehen.
 3. Führe `./gradlew :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest` aus. Die APKs entstehen unter `app/build/outputs/apk`. Lege sie außerhalb von Git ab.
-4. Nimm als nächsten eigenen Meilenstein offene Wischeingabe für DE/EN. Verwende den technischen Einstieg unten. Halte jeden Meilenstein baubar und ergänze diese Datei nach den Tests.
+4. Prüfe [PR #4](https://github.com/mixxermannipro/openboard/pull/4) für die Wischeingabe und [PR #3](https://github.com/mixxermannipro/openboard/pull/3) für den endgültigen Namen Tapwing. Halte jeden weiteren Meilenstein baubar und ergänze diese Datei nach den Tests.
 
 ## Fertig und belegt
 
@@ -19,9 +19,23 @@
 - Android 16 im x86_64-Emulator hat die Debug-APK installiert und Satzfink als aktive Tastatur erkannt. Echte Bildschirmtasten haben im getrennten Testprogramm `helo` eingegeben. Die lokale englische Vorschlagsleiste zeigte `helo`, `help`, `hell`. Ein weiterer Lauf mit der aktuellen APK und ausgeschaltetem WLAN und Mobilfunk hat `teh` mit der Leertaste zu `the` korrigiert. Die Löschtaste stellte danach `teh` wieder her. Das Passwortfeld öffnete die Tastatur und meldete Androids Passworttyp. Eine vollständige Passwort- und PIN-Prüfung, deutsche Vorschläge und die Korrekturrate sind offen. [Bildschirmfoto](screenshots/android-16-english-suggestions.png)
 - Zwei APKs sind lokal gebaut. Die Debug-APK ist mit dem lokalen Entwicklungsschlüssel signiert. Die Release-APK ist unsigniert. Android-Code ist für arm64-v8a, armeabi-v7a, x86 und x86_64 enthalten. Das sind gebaute Architekturen. Getestet wurde der x86_64-Emulator.
 
+## Zweiter Meilenstein: Wischeingabe
+
+- [PR #4](https://github.com/mixxermannipro/openboard/pull/4) baut auf #2 auf. Deutsche und englische Wischeingabe lässt sich unter „Gesten-Tippen“ aktivieren. Die Tastatur zeigt die Spur während der Berührung und bis zu sechs Treffer nach dem Loslassen.
+- Der GPL-3.0-Decoder stammt von CleverKeys. Die Tastatur nutzt drei eigene Wortlisten mit rund 129.000 US-englischen, 126.000 UK-englischen und 206.000 deutschen Wörtern. [Quellen](LICENSES.md)
+- Lokal liefen Debug- und Release-Build sowie 187 automatische Fälle. 182 bestanden, fünf bestehende Fälle wurden übersprungen. Ein künstlicher Pfad für „Straße“ und ein Pfad mit Umlaut waren in den lokalen Tests enthalten.
+- Der Android-16-Emulator setzte bei ausgeschaltetem WLAN und Mobilfunk `world` und `hallo` über Bildschirm-Wischpfade ein. Abbruch änderte das leere Feld nicht. Der gleiche deutsche Pfad erzeugte in Passwort- und Privatfeldern höchstens ein einzelnes Zeichen. Deutsche ß-Erkennung im Emulator war mit dem getesteten Pfad noch nicht zuverlässig. [Bildschirmfoto](screenshots/android-16-german-swipe.png)
+- Der automatische GitHub-Build ist in PR #4 eingerichtet. Der Zweig von PR #2 bleibt die Basis. PR #3 enthält nur die vom Issue verlangten Projektdateien für Tapwing. Beim Zusammenführen müssen die überschnittenen Projekttexte abgeglichen werden.
+
+## Gestaltung nach der Bildvorlage
+
+Der Zweig `feat/reference-keyboard` bringt das dunkle Graphit-Design, sichtbare abgerundete Tasten, Zahlenreihe, kompaktes deutsches QWERTZ und den sichtbaren Namen Tapwing in die App. [Gestaltungsdetails](REFERENCE_KEYBOARD.md)
+
+Die vorhandenen Werkzeuge sind aktiv. Die in der Vorlage sichtbaren Funktionen GIF, Übersetzung und Diktat müssen noch umgesetzt werden. Abgleich auf dem Honor-Gerät, exakte Abstände und Formate jenseits des Hochformats sind offene Prüfungen.
+
 ## Noch offen, in Reihenfolge
 
-1. **Tippqualität und Wischeingabe.** Für Wischen den GPL-3.0-Decoder aus [CleverKeys 6e964a5](https://github.com/tribixbite/CleverKeys/tree/6e964a571c4664a2a5a8c5138f56337cad55667d/src/main/kotlin/tribixbite/cleverkeys/swipe/geometric) zunächst ohne Modell evaluieren. `PointerTracker` und `BatchInputArbiter` erfassen bereits Spuren. `Suggest.getSuggestedWordsForBatchInput` ist der Anschluss für Vorschläge. Verwende eine getrennte Wörterbuchinstanz für die Wortliste. Der native Iterator hat veränderlichen Zustand. Kopiere Tastenmittelpunkte und Spur, dekodiere außerhalb der Oberfläche, prüfe Feld- und Layoutwechsel vor Vorschau und Einfügen. In `InputLogicHandler.showGestureSuggestionsWithPreviewVisuals` darf ein leeres Ergebnis kein früheres Tippwort einsetzen. Teste Abbruch, Multitouch, Passwort/PIN, Umlaut/ß, DE-QWERTZ, EN-QWERTY und Zweitvorschläge. Ergänze Wortkorpus, Korrekturrate, Korrektur-Rücknahme und Messungen. Sprachmischung und deutsche Komposita brauchen eigene Beispiele.
+1. **Tippqualität und Wischen absichern.** Offene Wischeingabe ist auf dem Zweig `feat/open-swipe` integriert. Prüfe echte Wischspuren für beide Sprachen und die Korrekturrate auf verschiedenen Geräten. Ergänze Abbruch bei App- und Layoutwechsel, deutsche Komposita, Sprachmischung, Umlaut und ß auf echten Geräten. Die bisherige Geräteprüfung lief mit künstlichen Touch-Ereignissen im Emulator.
 2. **Darstellung und Bedienung.** Prüfe eine vergleichbare Konfiguration mit Gboard/PixelBoard, ohne fremde Grafiken. Vergleiche Tastengrößen, Leiste, Kontrast und Abstände. Prüfe Hoch- und Querformat, Einhand, geteilte und schwebende Ansicht, Tablet und Faltgerät, TalkBack und mehrere echte Apps. Dokumentiere Gerät, Auflösung und Einstellungen.
 3. **Lokales Diktat.** Beginne mit lokalem Whisper für Deutsch und Englisch. Prüfe Modellformat, Prüfsumme und ARM64. Baue danach Mikrofon, Pegel, Zeit, Abbruch, Vorschau und sichere einmalige Einfügung. Erst danach folgen Pausenerkennung, laufende Teilvorschau, Bereinigt, Smart mit Selbstkorrekturen, Professionell, Übersetzen und eigene Regeln. [Diktat](VOICE_DICTATION.md) · [Modelle](MODELS.md)
 4. **Modellverwaltung und lokale KI.** Download, Fortsetzen, Abbruch, Prüfsumme, Import, Speicherprüfung und Auswahl fertigstellen. Lokale KI mit llama.cpp, begrenzter Laufzeit und Abbruch getrennt von der Tastatur. Prüfe Texttreue auf DE/EN und nenne nur auf Android getestete Modelle im Katalog.

@@ -201,6 +201,7 @@ public final class InputLogic {
      * @param settingsValues the current values of the settings.
      */
     public void onOrientationChange(final SettingsValues settingsValues) {
+        mInputLogicHandler.cancelSwipe();
         // If !isComposingWord, #commitTyped() is a no-op, but still, it's better to avoid
         // the useless IPC of {begin,end}BatchEdit.
         if (mWordComposer.isComposingWord()) {
@@ -237,6 +238,7 @@ public final class InputLogic {
      * @return the complete transaction object
      */
     public InputTransaction onTextInput(SettingsValues settingsValues, Event event, CapsMode keyboardCapsMode, LatinIME.UIHandler handler) {
+        mInputLogicHandler.cancelSwipe();
         String rawText = event.getTextToCommit().toString();
         InputTransaction inputTransaction = new InputTransaction(settingsValues, event,
                 SystemClock.uptimeMillis(), mSpaceState,
@@ -289,6 +291,7 @@ public final class InputLogic {
     // interface
     public InputTransaction onPickSuggestionManually(SettingsValues settingsValues, SuggestedWordInfo suggestionInfo,
             CapsMode keyboardCapsMode, String currentKeyboardScript, LatinIME.UIHandler handler) {
+        mInputLogicHandler.cancelSwipe();
         if (isInlineEmojiSearchAction()) {
             deleteTextReplacedByEmoji();
         }
@@ -403,6 +406,8 @@ public final class InputLogic {
             return expectCursorMove;
         }
 
+        mInputLogicHandler.cancelSwipe();
+
         // if all text is gone, we treat it like onStartInput
         if (GestureDataGatheringKt.useBackgroundGathering && newSelStart == 0 && newSelEnd == 0 && !mConnection.hasTextAfterCursor())
             BackgroundGatheringCache.saveOrClear(mLatinIME);
@@ -490,6 +495,7 @@ public final class InputLogic {
      */
     public InputTransaction onCodeInput(SettingsValues settingsValues, @NonNull Event event,
             CapsMode keyboardCapsMode, String currentKeyboardScript, LatinIME.UIHandler handler) {
+        mInputLogicHandler.cancelSwipe();
         mWordBeingCorrectedByCursor = null;
         mJustRevertedACommit = false;
 
@@ -551,19 +557,14 @@ public final class InputLogic {
         return inputTransaction;
     }
 
-    public void onStartBatchInput(final SettingsValues settingsValues,
+    public void onStartBatchInput(final LatinIME.UIHandler handler) {
+        mInputLogicHandler.onStartBatchInput();
+        handler.cancelUpdateSuggestionStrip();
+    }
+
+    private void prepareForOpenSwipe(final SettingsValues settingsValues,
             final KeyboardSwitcher keyboardSwitcher, final LatinIME.UIHandler handler) {
         mWordBeingCorrectedByCursor = null;
-        mInputLogicHandler.onStartBatchInput();
-        handler.showGesturePreviewAndSetSuggestions(SuggestedWords.getEmptyBatchInstance(), false);
-        handler.cancelUpdateSuggestionStrip();
-        ++mAutoCommitSequenceNumber;
-
-        if (GestureDataGatheringKt.useBackgroundGathering && mConnection.hasSelection())
-            BackgroundGatheringCache.INSTANCE.onEditSelection(mConnection.getSelectedText(0), mConnection.getTextBeforeCursor(40, 0), mConnection.getTextAfterCursor(40, 0));
-        if (GestureDataGatheringKt.useBackgroundGathering && mWordComposer.isComposingWord() && mWordComposer.isCursorFrontOrMiddleOfComposingWord())
-            BackgroundGatheringCache.INSTANCE.onEditWord(mWordComposer.getTypedWord());
-
         mConnection.beginBatchEdit();
         if (mWordComposer.isComposingWord()) {
             if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
@@ -618,34 +619,33 @@ public final class InputLogic {
                 getActualCapsMode(settingsValues, keyboardSwitcher.getKeyboardCapsMode()));
     }
 
-    /* The sequence number member is only used in onUpdateBatchInput. It is increased each time
-     * auto-commit happens. The reason we need this is, when auto-commit happens we trim the
-     * input pointers that are held in a singleton, and to know how much to trim we rely on the
-     * results of the suggestion process that is held in mSuggestedWords.
-     * However, the suggestion process is asynchronous, and sometimes we may enter the
-     * onUpdateBatchInput method twice without having recomputed suggestions yet, or having
-     * received new suggestions generated from not-yet-trimmed input pointers. In this case, the
-     * mIndexOfTouchPointOfSecondWords member will be out of date, and we must not use it lest we
-     * remove an unrelated number of pointers (possibly even more than are left in the input
-     * pointers, leading to a crash).
-     * To avoid that, we increase the sequence number each time we auto-commit and trim the
-     * input pointers, and we do not use any suggested words that have been generated with an
-     * earlier sequence number.
-     */
-    private int mAutoCommitSequenceNumber = 1;
-    public void onUpdateBatchInput(final InputPointers batchPointers) {
-        mInputLogicHandler.onUpdateBatchInput(batchPointers, mAutoCommitSequenceNumber);
-    }
-
-    public void onEndBatchInput(final InputPointers batchPointers) {
-        mInputLogicHandler.updateTailBatchInput(batchPointers, mAutoCommitSequenceNumber);
-        ++mAutoCommitSequenceNumber;
+    public void onEndBatchInput(final InputPointers batchPointers, final CapsMode capsMode) {
+        mInputLogicHandler.finishSwipe(batchPointers, getActualCapsMode(Settings.getValues(), capsMode),
+                mConnection.getExpectedSelectionStart());
     }
 
     public void onCancelBatchInput(final LatinIME.UIHandler handler) {
-        mInputLogicHandler.onCancelBatchInput();
+        mInputLogicHandler.cancelSwipe();
         handler.showGesturePreviewAndSetSuggestions(
                 SuggestedWords.getEmptyInstance(), true /* dismissGestureFloatingPreviewText */);
+    }
+
+    public boolean canApplyOpenSwipeAt(final int cursor) {
+        return Settings.getValues().mGestureInputEnabled
+                && mConnection.getExpectedSelectionStart() == cursor
+                && mConnection.getExpectedSelectionEnd() == cursor;
+    }
+
+    public void prepareOpenSwipe(final Keyboard keyboard) {
+        mInputLogicHandler.prepareSwipe(keyboard);
+    }
+
+    public void cancelOpenSwipe() {
+        mInputLogicHandler.cancelSwipe();
+    }
+
+    public void closeOpenSwipeWorker() {
+        mInputLogicHandler.closeSwipeWorker();
     }
 
     // TODO: on the long term, this method should become private, but it will be difficult.
@@ -2327,17 +2327,17 @@ public final class InputLogic {
         return false;
     }
 
-    /**
-     * Do the final processing after a batch input has ended. This commits the word to the editor.
-     * @param settingsValues the current values of the settings.
-     * @param suggestedWords suggestedWords to use.
-     */
+    public void applyOpenSwipe(final SettingsValues settingsValues, final SuggestedWords suggestions,
+            final KeyboardSwitcher keyboardSwitcher, final LatinIME.UIHandler handler) {
+        if (suggestions.isEmpty()) return;
+        prepareForOpenSwipe(settingsValues, keyboardSwitcher, handler);
+        onUpdateTailBatchInputCompleted(settingsValues, suggestions, keyboardSwitcher);
+    }
+
     public void onUpdateTailBatchInputCompleted(final SettingsValues settingsValues,
             final SuggestedWords suggestedWords, final KeyboardSwitcher keyboardSwitcher) {
         final String batchInputText = suggestedWords.isEmpty() ? null : suggestedWords.getWord(0);
-        if (TextUtils.isEmpty(batchInputText)) {
-            return;
-        }
+        if (TextUtils.isEmpty(batchInputText)) return;
         mConnection.beginBatchEdit();
         if (SpaceState.PHANTOM == mSpaceState) {
             insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues);
@@ -2564,6 +2564,10 @@ public final class InputLogic {
         if (inputStyle != SuggestedWords.INPUT_STYLE_UPDATE_BATCH && inputStyle != SuggestedWords.INPUT_STYLE_TAIL_BATCH
                         && isInlineEmojiSearchAction()) {
             searchForEmojiInline(sequenceNumber, callback);
+            return;
+        }
+        if (mWordComposer.isBatchMode() && mSuggestedWords.mInputStyle == SuggestedWords.INPUT_STYLE_TAIL_BATCH) {
+            callback.onGetSuggestedWords(mSuggestedWords);
             return;
         }
         final SettingsValues settingsValues = Settings.getValues();

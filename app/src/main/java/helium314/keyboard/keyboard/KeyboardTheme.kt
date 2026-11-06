@@ -52,6 +52,7 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
         const val THEME_LIGHT = "light"
         const val THEME_HOLO_WHITE = "holo_white"
         const val THEME_DARK = "dark"
+        const val THEME_GRAPHITE = "graphite"
         const val THEME_DARKER = "darker"
         const val THEME_BLACK = "black"
         const val THEME_DYNAMIC = "dynamic"
@@ -66,7 +67,7 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
         const val THEME_SAND = "sand"
         const val THEME_VIOLETTE = "violette"
         fun getAvailableDefaultColors(prefs: SharedPreferences, isNight: Boolean) = listOfNotNull(
-            if (!isNight) THEME_LIGHT else null, THEME_DARK,
+            THEME_GRAPHITE, if (!isNight) THEME_LIGHT else null, THEME_DARK,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) THEME_DYNAMIC else null,
             if (prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) == STYLE_HOLO) THEME_HOLO_WHITE else null,
             THEME_DARKER,
@@ -162,6 +163,19 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
                     ContextCompat.getColor(context, R.color.key_background_normal_lxx_light_border),
                     ContextCompat.getColor(context, R.color.key_text_color_lxx_light),
                     ContextCompat.getColor(context, R.color.key_hint_letter_color_lxx_light),
+                    keyboardBackground = backgroundImage
+                )
+                THEME_GRAPHITE -> DefaultColors(
+                    themeStyle = themeStyle,
+                    hasKeyBorders = hasBorders,
+                    accent = "#3F4660".toColorInt(),
+                    background = "#2B2B2D".toColorInt(),
+                    keyBackground = "#46454B".toColorInt(),
+                    functionalKey = "#3F4660".toColorInt(),
+                    spaceBar = "#46454B".toColorInt(),
+                    keyText = "#E4E4E6".toColorInt(),
+                    keyHintText = "#C1C0C8".toColorInt(),
+                    gesture = "#AFBCF2".toColorInt(),
                     keyboardBackground = backgroundImage
                 )
                 THEME_DARK -> DefaultColors(

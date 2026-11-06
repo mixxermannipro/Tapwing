@@ -92,11 +92,11 @@
     <string name="user_dict_settings_all_languages">"Bütün dillər üçün"</string>
     <string name="user_dict_settings_more_languages">"Digər dillər…"</string>
     <string name="settings_category_clipboard_history">Mübadilə buferi tarixçəsi</string>
-    <string name="spell_checker_service_name">Satzfink Yazı Yoxlayıcısı</string>
-    <string name="android_spell_checker_settings">Satzfink Yazı Yoxlayıcısı Parametrləri</string>
+    <string name="spell_checker_service_name">Tapwing Yazı Yoxlayıcısı</string>
+    <string name="android_spell_checker_settings">Tapwing Yazı Yoxlayıcısı Parametrləri</string>
     <string name="select_input_method">"Daxiletmə metodunu seçin"</string>
     <string name="settings_screen_appearance">"Görünüş"</string>
-    <string name="ime_settings">Satzfink Tənzimləmələri</string>
+    <string name="ime_settings">Tapwing Tənzimləmələri</string>
     <string name="settings_category_input">Giriş</string>
     <string name="settings_category_additional_keys">Əlavə Düymələr</string>
     <string name="undo">"Ləğv edin"</string>
