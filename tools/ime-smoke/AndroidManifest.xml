@@ -7,4 +7,6 @@
             android:exported="true"
             android:windowSoftInputMode="adjustResize"/>
     </application>
+    <instrumentation android:name=".SwipeInstrumentation"
+        android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
 </manifest>

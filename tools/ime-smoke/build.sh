@@ -13,9 +13,9 @@ trap 'rm -rf -- "$work_dir"' EXIT
 build_tools="$ANDROID_HOME/build-tools/36.0.0"
 android_jar="$ANDROID_HOME/platforms/android-37.2/android.jar"
 mkdir -p "$work_dir/classes" "$work_dir/dex"
-"$JAVA_HOME/bin/javac" --release 17 -classpath "$android_jar" -d "$work_dir/classes" "$fixture_dir/FixtureActivity.java"
+"$JAVA_HOME/bin/javac" --release 17 -classpath "$android_jar" -d "$work_dir/classes" "$fixture_dir/"*.java
 "$build_tools/d8" --lib "$android_jar" --min-api 29 --output "$work_dir/dex" \
-    "$work_dir/classes/io/github/mixxermannipro/satzfink/smoke/FixtureActivity.class"
+    "$work_dir/classes/io/github/mixxermannipro/satzfink/smoke/"*.class
 "$build_tools/aapt2" link -I "$android_jar" --manifest "$fixture_dir/AndroidManifest.xml" \
     --min-sdk-version 29 --target-sdk-version 34 -o "$work_dir/raw.apk"
 "$JAVA_HOME/bin/jar" --update --file "$work_dir/raw.apk" -C "$work_dir/dex" classes.dex

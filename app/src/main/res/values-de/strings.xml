@@ -39,6 +39,7 @@
     <string name="bigram_prediction">"Vorschläge für nächstes Wort"</string>
     <string name="bigram_prediction_summary">"Anhand des vorherigen Wortes Vorschläge machen"</string>
     <string name="gesture_input">Gesten-Tippen aktivieren</string>
+    <string name="open_swipe_summary">Wische über die Buchstaben. Vorschläge für Deutsch und Englisch erscheinen nach dem Loslassen.</string>
     <string name="gesture_input_summary">Gib ein Wort ein, indem du durch die Buchstaben gleitest</string>
     <string name="gesture_preview_trail">Gestenspur anzeigen</string>
     <string name="gesture_floating_preview_text">Schwebender Echtzeit-Vorschlag</string>

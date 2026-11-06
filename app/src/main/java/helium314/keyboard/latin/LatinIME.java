@@ -200,7 +200,6 @@ public class LatinIME extends InputMethodService implements
         private static final int MSG_SHOW_GESTURE_PREVIEW_AND_SET_SUGGESTIONS = 3;
         private static final int MSG_RESUME_SUGGESTIONS = 4;
         private static final int MSG_REOPEN_DICTIONARIES = 5;
-        private static final int MSG_UPDATE_TAIL_BATCH_INPUT_COMPLETED = 6;
         private static final int MSG_RESET_CACHES = 7;
         private static final int MSG_WAIT_FOR_DICTIONARY_LOAD = 8;
         private static final int MSG_DEALLOCATE_MEMORY = 9;
@@ -268,13 +267,6 @@ public class LatinIME extends InputMethodService implements
                     // changed.
                     postWaitForDictionaryLoad();
                     latinIme.resetDictionaryFacilitatorIfNecessary();
-                    break;
-                case MSG_UPDATE_TAIL_BATCH_INPUT_COMPLETED:
-                    final SuggestedWords suggestedWords = (SuggestedWords) msg.obj;
-                    latinIme.mInputLogic.onUpdateTailBatchInputCompleted(
-                            latinIme.mSettings.getCurrent(),
-                            suggestedWords, latinIme.mKeyboardSwitcher);
-                    latinIme.onTailBatchInputResultShown(suggestedWords);
                     break;
                 case MSG_RESET_CACHES:
                     final SettingsValues settingsValues = latinIme.mSettings.getCurrent();
@@ -403,10 +395,6 @@ public class LatinIME extends InputMethodService implements
             removeMessages(MSG_SHOW_GESTURE_PREVIEW_AND_SET_SUGGESTIONS);
             obtainMessage(MSG_SHOW_GESTURE_PREVIEW_AND_SET_SUGGESTIONS,
                     ARG1_NOT_GESTURE_INPUT, ARG2_UNUSED, suggestedWords).sendToTarget();
-        }
-
-        public void showTailBatchInputResult(final SuggestedWords suggestedWords) {
-            obtainMessage(MSG_UPDATE_TAIL_BATCH_INPUT_COMPLETED, suggestedWords).sendToTarget();
         }
 
         public void postSwitchLanguage(final InputMethodSubtype subtype) {
@@ -701,6 +689,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onDestroy() {
+        mInputLogic.closeOpenSwipeWorker();
         mClipboardHistoryManager.onDestroy();
         mDictionaryFacilitator.closeDictionaries();
         mSettings.onDestroy();
@@ -846,6 +835,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void onStartInputInternal(EditorInfo editorInfo, boolean restarting) {
+        mInputLogic.cancelOpenSwipe();
         super.onStartInput(editorInfo, restarting);
 
         RichInputMethodSubtype subtypeForApp = editorInfo == null
@@ -1005,7 +995,11 @@ public class LatinIME extends InputMethodService implements
         mainKeyboardView.setGestureHandlingEnabledByUser(
                 currentSettingsValues.mGestureInputEnabled,
                 currentSettingsValues.mGestureTrailEnabled,
-                currentSettingsValues.mGestureFloatingPreviewTextEnabled);
+                false /* decode only after the finger lifts */);
+        final Keyboard swipeKeyboard = mKeyboardSwitcher.getKeyboard();
+        if (currentSettingsValues.mGestureInputEnabled && swipeKeyboard != null) {
+            mInputLogic.prepareOpenSwipe(swipeKeyboard);
+        }
 
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime");
     }
@@ -1033,6 +1027,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     void onFinishInputInternal() {
+        mInputLogic.cancelOpenSwipe();
         super.onFinishInput();
         Log.i(TAG, "onFinishInput");
 
@@ -1444,16 +1439,14 @@ public class LatinIME extends InputMethodService implements
     }
 
     public void onStartBatchInput() {
-        mInputLogic.onStartBatchInput(mSettings.getCurrent(), mKeyboardSwitcher, mHandler);
+        if (!mSettings.getCurrent().mGestureInputEnabled) return;
+        mInputLogic.onStartBatchInput(mHandler);
         mGestureConsumer.onGestureStarted(mRichImm.getCurrentSubtypeLocale(), mKeyboardSwitcher.getKeyboard());
     }
 
-    public void onUpdateBatchInput(final InputPointers batchPointers) {
-        mInputLogic.onUpdateBatchInput(batchPointers);
-    }
-
     public void onEndBatchInput(final InputPointers batchPointers) {
-        mInputLogic.onEndBatchInput(batchPointers);
+        if (batchPointers == null) return;
+        mInputLogic.onEndBatchInput(batchPointers, mKeyboardSwitcher.getKeyboardCapsMode());
         mGestureConsumer.onGestureCompleted(batchPointers);
     }
 
@@ -1473,6 +1466,13 @@ public class LatinIME extends InputMethodService implements
         mGestureConsumer.onImeSuggestionsProcessed(suggestedWords,
                 mInputLogic.getComposingStart(), mInputLogic.getComposingLength(),
                 mDictionaryFacilitator);
+    }
+
+    public void applyOpenSwipeSuggestions(final SuggestedWords suggestions) {
+        if (suggestions.isEmpty()) return;
+        mInputLogic.applyOpenSwipe(mSettings.getCurrent(), suggestions, mKeyboardSwitcher, mHandler);
+        showGesturePreviewAndSetSuggestions(suggestions, true);
+        onTailBatchInputResultShown(suggestions);
     }
 
     // This method must run on the UI Thread.

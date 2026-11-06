@@ -2,7 +2,7 @@
 
 Satzfink ist eine quelloffene Android-Tastatur auf Basis von HeliBoard. Die erste Entwicklungsversion konzentriert sich auf Tippen und Korrektur auf Deutsch und Englisch. Sie enthält keine Netzwerkberechtigung.
 
-**Stand 0.1.0-dev:** Die Tastatur ist für Entwicklung und Tests gedacht. Wischeingabe, Diktat und KI-Schreibwerkzeuge sind offen. Die [Funktionsübersicht](docs/FEATURE_PARITY.md) trennt vorhandene Funktionen von geprüften Funktionen.
+**Stand 0.1.0-dev:** Die Tastatur ist für Entwicklung und Tests gedacht. Wischeingabe für Deutsch und Englisch lässt sich unter „Gesten-Tippen“ einschalten. Diktat und KI-Schreibwerkzeuge sind offen. Die [Funktionsübersicht](docs/FEATURE_PARITY.md) trennt vorhandene Funktionen von geprüften Funktionen.
 
 ## Bauen und ausprobieren
 
@@ -21,4 +21,4 @@ Satzfink steht unter [GPL-3.0](LICENSE). Der vorhandene Tastaturcode stammt von 
 
 ## English
 
-Satzfink is an open-source Android keyboard based on HeliBoard. The development build includes offline typing and dictionaries for German, US English and UK English. Open swipe typing, dictation and AI writing tools are planned. Use the build commands above to install the development APK. [Development handoff](docs/PROGRESS.md)
+Satzfink is an open-source Android keyboard based on HeliBoard. The development build includes offline typing and dictionaries for German, US English and UK English. Offline swipe typing for German and English can be enabled in Gesture Typing. Dictation and AI writing tools are planned. Use the build commands above to install the development APK. [Development handoff](docs/PROGRESS.md)

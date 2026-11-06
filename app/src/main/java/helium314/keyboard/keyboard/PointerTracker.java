@@ -679,7 +679,8 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         }
         sPointerTrackerQueue.add(this);
         onDownEventInternal(x, y, eventTime);
-        if (!sGestureEnabler.shouldHandleGesture()) {
+        mIsDetectingGesture = false;
+        if (!sGestureEnabler.shouldHandleGesture() || !Settings.getValues().mGestureInputEnabled) {
             return;
         }
         // A gesture should start only from a non-modifier key. Note that the gesture detection is

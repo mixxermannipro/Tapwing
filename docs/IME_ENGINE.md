@@ -6,4 +6,10 @@ Die Wörterbuchbibliothek wird aus C++ gebaut und mit der APK installiert. Sie l
 
 `InputAttributes` wertet den Android-Feldtyp aus. Passwortfelder unterdrücken Vorschläge und Korrekturen. Die Android-Markierung gegen personalisiertes Lernen wird auch bei Zahlenfeldern gelesen. Die Zwischenablage prüft diese Bedingungen vor automatischen Zugriffen.
 
-Für Wischen bleiben Touch-Erfassung und Vorschlagsanzeige als Anschlusspunkte erhalten. Nächster Schritt ist der geometrische CleverKeys-Decoder. Er bekommt eine Kopie von Tastenpositionen, Wischpfad und passenden Wörterbucheinträgen. Vorschläge verfallen bei Feldwechsel, Layoutwechsel oder Abbruch. Leere Ergebnisse dürfen kein früheres Tippwort einsetzen.
+## Offene Wischeingabe
+
+Über „Gesten-Tippen“ lässt sich die Wischeingabe für Deutsch und Englisch einschalten. Die Spur erscheint während der Geste. Der geometrische CleverKeys-Decoder liefert das Wort und Alternativen nach dem Loslassen. Die App liest dafür nur die eingebauten Wortlisten. Pro Arbeitsthread bleiben jeweils eine Wortliste und ein Layout-Index im Speicher.
+
+`SwipeLayout` übernimmt die Tastenpositionen aus der aktuell gezeichneten Tastatur. Umlaute können über ihre Grundbuchstaben erkannt werden. Wenn ß keine eigene Taste hat, benutzt der Decoder die Position von S. Das Ergebnis behält die Wortschreibweise aus der Liste.
+
+`InputLogicHandler` prüft nach der Berechnung noch einmal die Geste, das Eingabefeld, die Verbindung, das Layout und die Cursorposition. Abbruch, neue Eingabe, Feld- oder Cursorwechsel verwerfen ausstehende Ergebnisse. Erst ein gültiges Wort ändert den Text. Passwort/PIN, Inkognito und Felder ohne Vorschläge sind ausgenommen. Diese Fassung verarbeitet einzelne Wörter und einen Finger.
