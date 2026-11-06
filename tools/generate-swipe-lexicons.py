@@ -49,7 +49,7 @@ def main():
         target = ASSETS / f"{language}.lex"
         payload = generate(SOURCE / source)
         if args.check:
-            if not target.exists() or target.read_bytes() != payload:
+            if not target.exists() or gzip.decompress(target.read_bytes()) != gzip.decompress(payload):
                 parser.exit(1, f"{target.relative_to(ROOT)} differs from its source\n")
         else:
             ASSETS.mkdir(parents=True, exist_ok=True)
