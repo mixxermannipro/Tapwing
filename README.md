@@ -1,28 +1,26 @@
 # Tapwing
 
-Tapwing ist eine freie Open-Source-Tastatur fuer Android. Ziel ist das
-vertraute Gboard-Erlebnis mit eigenen KI-Funktionen, ohne dass Eingaben
-das Geraet verlassen.
+Tapwing ist eine quelloffene Android-Tastatur auf Basis von HeliBoard. Die erste Entwicklungsversion konzentriert sich auf Tippen und Korrektur auf Deutsch und Englisch. Sie enthält keine Netzwerkberechtigung.
 
-**Status:** Fruehe Entwicklung. Dieses Repository wird gerade aufgebaut.
+**Stand 0.1.0-dev:** Die Tastatur ist für Entwicklung und Tests gedacht. Wischeingabe für Deutsch und Englisch lässt sich unter „Gesten-Tippen“ einschalten. Diktat und KI-Schreibwerkzeuge sind offen. Die [Funktionsübersicht](docs/FEATURE_PARITY.md) trennt vorhandene Funktionen von geprüften Funktionen.
 
-## Grundsaetze
+## Bauen und ausprobieren
 
-- Der Tastaturkern arbeitet ohne Internet-Berechtigung.
-- Passwortfelder sind von KI-Funktionen, Verlauf und Protokollen
-  ausgeschlossen.
-- Keine Telemetrie und keine Werbung.
+Du brauchst ein vollständiges JDK 17, Android SDK 37.2 und NDK 28.2.13676358. Setze `JAVA_HOME` auf das JDK und `ANDROID_HOME` auf das Android SDK.
 
-Details stehen in [PRIVACY.md](PRIVACY.md).
+```sh
+./gradlew :app:assembleDebug
+adb install app/build/outputs/apk/debug/Tapwing_0.1.0-dev-debug.apk
+```
 
-## Entwicklung
+Öffne Tapwing, aktiviere die Tastatur in den Android-Einstellungen und wähle sie als Eingabemethode. Unter „Sprachen und Layouts“ kannst du Deutsch (QWERTZ) und Englisch (QWERTY) einrichten.
 
-- Hinweise fuer Beitraege: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Sicherheitsmeldungen: [SECURITY.md](SECURITY.md)
-- Arbeitsanleitung fuer Coding-Assistenten: [AGENTS.md](AGENTS.md)
+[Gestaltung nach Bildvorlage](docs/REFERENCE_KEYBOARD.md) · [Tests](docs/TESTING.md) · [Fortschritt](docs/PROGRESS.md) · [Datenschutz](PRIVACY.md) · [Lizenzen](docs/LICENSES.md)
 
-## Lizenz
+Tapwing-eigene Beiträge stehen unter [GPL-3.0-or-later](LICENSE). Übernommene GPL-3.0-only-Dateien behalten ihre Lizenz; für die kombinierte App gilt GPLv3. Der vorhandene Tastaturcode stammt von HeliBoard, OpenBoard und AOSP LatinIME. Die Originalhinweise stehen im Quellcode und unter [docs/upstream](docs/upstream).
 
-Tapwing steht unter der [GPL-3.0-or-later](LICENSE). Falls Teile aus dem
-OpenBoard-Projekt (GPL-3.0) stammen sollten, ist deren Lizenz damit
-eingehalten.
+[Mitwirken](CONTRIBUTING.md) · [Sicherheitsmeldungen](SECURITY.md) · [Arbeitsanleitung](AGENTS.md) · [Entwicklungsumgebung](tools/dev/README.md)
+
+## English
+
+Tapwing is an open-source Android keyboard based on HeliBoard. The development build includes offline typing and dictionaries for German, US English and UK English. Offline swipe typing for German and English can be enabled in Gesture Typing. Dictation and AI writing tools are planned. Use the build commands above to install the development APK. [Development handoff](docs/PROGRESS.md)

@@ -6,18 +6,29 @@ Eingaben und sendet nichts ins Netz.
 
 ## Struktur
 
-Annahme, an den tatsaechlichen Stand anpassen, sobald Code liegt:
+Tapwing basiert auf HeliBoard 4.2 und unterstützt Android 10 und neuer.
+Java/Kotlin steuern die Eingabe, C++ enthält die lokale Wörterbuchsuche.
 
-- `app/` enthaelt das Android-Modul (Kotlin).
-- `docs/` enthaelt Architektur, Arbeitsstand und Entscheidungen.
+- Beginne mit [docs/PROGRESS.md](docs/PROGRESS.md) und [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- `app/src/main/java/helium314/keyboard` enthält Tastatur, Einstellungen und Eingabelogik.
+- `app/src/main/jni` enthält den Wörterbuchcode.
+- `dictionaries/sources` enthält Quellwortlisten für Deutsch und Englisch.
+- `tools/dev` enthält die Anleitung für eine neue Entwicklungsumgebung.
 
 ## Befehle
 
-Annahmen, beim ersten Lauf pruefen und hier korrigieren:
+Vollständiges JDK 17, Android SDK 37.2, Build-Tools 36.0.0 und NDK
+28.2.13676358 verwenden. Lokale Pfade stehen nur in Umgebungsvariablen
+oder der ignorierten `local.properties`.
 
-- Bauen: `./gradlew assembleDebug`
-- Tests: `./gradlew test`
-- Lint: `./gradlew lint`
+- Bauen: `./gradlew :app:assembleDebug :app:assembleRelease`
+- Tests: `./gradlew :app:testDebugUnitTest`
+- Lint: `./gradlew :app:lintDebug`
+- Wörterbücher: `python3 tools/generate-swipe-lexicons.py --check`
+- Änderungen: `git diff --check`
+
+Testergebnisse und offene Aufgaben in `docs/PROGRESS.md` festhalten.
+Gerät, Emulator und lokale Tests getrennt ausweisen.
 
 ## Regeln
 

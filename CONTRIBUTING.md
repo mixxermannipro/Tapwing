@@ -14,3 +14,6 @@ und nenne Geraet, Android-Version und durchgefuehrte Tests.
 
 Melde moegliche Sicherheitsluecken ueber den Weg in
 [SECURITY.md](SECURITY.md).
+
+Beginne mit [docs/PROGRESS.md](docs/PROGRESS.md). Nenne bei Eingabefehlern
+auch Feldtyp und Layout. Nutze ausschließlich künstliche Testdaten.

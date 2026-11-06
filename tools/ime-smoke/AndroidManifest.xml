@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-only -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.github.mixxermannipro.satzfink.smoke">
+    <application android:label="Tapwing IME Test" android:allowBackup="false" android:debuggable="true">
+        <activity android:name=".FixtureActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
+    </application>
+    <instrumentation android:name=".SwipeInstrumentation"
+        android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
+</manifest>
