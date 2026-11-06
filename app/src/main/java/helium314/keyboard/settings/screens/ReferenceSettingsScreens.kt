@@ -3,6 +3,7 @@ package helium314.keyboard.settings.screens
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.view.textservice.TextServicesManager
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -226,7 +227,12 @@ fun TextCorrectionScreen(onClickBack: () -> Unit) {
     observedPreferences() // Also refreshes Android-owned status after returning from settings.
     val context = LocalContext.current
     val spellcheckEnabled = runCatching {
-        context.getSystemService(TextServicesManager::class.java)?.isSpellCheckerEnabled ?: false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.getSystemService(TextServicesManager::class.java)?.isSpellCheckerEnabled ?: false
+        } else {
+            // The public TextServicesManager getter was added in Android 12.
+            android.provider.Settings.Secure.getInt(context.contentResolver, "spell_checker_enabled", 0) == 1
+        }
     }.getOrDefault(false)
     ReferencePage(stringResource(R.string.ref_correction), onClickBack) {
         Column {

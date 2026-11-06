@@ -66,6 +66,10 @@ Der aktuelle Gesamtlauf erfasst **216 Tests: 211 bestanden, 5 bekannte Ausnahmen
 0 Fehler**. Alle 12 neuen Compose-UI-Fälle bestanden. Debug und unsignierte
 Release-APK wurden auch mit der neuen Oberfläche gebaut. Die abschließende
 Lint-Auswertung läuft beim Sichern dieses Standes noch.
+Der Abschlusslauf fand einen neuen API-Kompatibilitätsfehler beim Anzeigen des
+System-Rechtschreibstatus. Der Zugriff nutzt jetzt ab Android 12 den öffentlichen
+Getter und auf Android 10/11 den lesbaren Systemwert; die Lint-Baseline bleibt
+unverändert. Die Abschlussprüfung wird im Pull Request festgehalten.
 Der zusätzliche UI-Reviewer meldete ein erreichtes Nutzungslimit; der neue
 UI-Stand wurde deshalb selbst geprüft. Die früheren unabhängigen Reviews des
 Wisch-Fixes und der präzisen Lint-Baseline bleiben dokumentiert.
@@ -89,7 +93,7 @@ Wisch-Fixes und der präzisen Lint-Baseline bleiben dokumentiert.
 - Der Emulator startete auf diesem Host mit `-gpu host -feature -Vulkan`. Softwaregrafik und `-gpu off` brachen beim Start ab. Bei gemeldeter Hardwaretastatur musste die Bildschirmtastatur zusätzlich aktiviert werden.
 - Das Paket verwendet weiter die internen Java-Paketnamen von HeliBoard. Ein anderer Name für die installierte App steht in `applicationId`. Bewahre diese Trennung, solange native Bindungen die internen Namen voraussetzen.
 
-## Aktueller Prüflauf
+## Prüflauf vor dem Einstellungsumbau
 
 Die aktuelle lokale Gradle-Suite erfasst 204 Tests: **199 bestanden, 5 bewusst
 übersprungen, 0 Fehler**. Die fünf bekannten Ausnahmen sind der Hangul-Fall aus
