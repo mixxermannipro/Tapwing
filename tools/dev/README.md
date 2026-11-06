@@ -73,3 +73,21 @@ verwalteter Proxy erforderlich ist, setze dessen Host/Port als lokale
 Proxyregeln und CA-Vertrauen erhalten. Bei eigenem JDK gegebenenfalls den
 System-Truststore über `systemProp.javax.net.ssl.trustStore` auswählen.
 TLS-Prüfung eingeschaltet lassen; keine Zugangsdaten in Projektdateien schreiben.
+
+Robolectric lädt seine Android-Testlaufzeit getrennt vom Gradle-Cache. In dieser
+Cloud-Sitzung reicht die lokale Datei
+`$GRADLE_USER_HOME/init.d/tapwing-test-network.gradle` Proxy- und Truststore-Werte
+an die Testprozesse weiter; sie setzt außerdem
+`robolectric.dependency.proxy.host` und `robolectric.dependency.proxy.port`.
+Die API-34-Testlaufzeit ist mit geprüfter SHA-512-Summe im lokalen Maven-Cache
+vorbereitet. Diese Einstellungen gehören ausschließlich zur Build-Umgebung;
+die App erhält dadurch keine Netzwerkberechtigung.
+
+## Lint-Altbestand
+
+Der vollständige Erstlauf fand 68 `MissingTranslation`-Fehler in der unverändert
+übernommenen Datei `values/strings-talkback-descriptions.xml`. Diese konkreten
+Fundstellen stehen in `app/lint-baseline.xml`. Die Übersetzungen fehlen weiterhin;
+sie wurden nicht künstlich ergänzt. Neue Fehler stoppen Lint weiterhin
+(`abortOnError = true`), und die 129 Warnungen des Erstlaufs bleiben sichtbar.
+Die Baseline enthält keine Warnungen und keine pauschal deaktivierten Prüfungen.

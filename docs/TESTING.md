@@ -44,3 +44,11 @@ adb shell "am instrument -r -w -e path '<punkte>' -e expected '<testwort>' io.gi
 ```
 
 `INSTRUMENTATION_CODE: -1` bedeutet bestanden. `-e cancel true` bricht die Geste ab. Mit `-e field 1` prüfst du das Privatfeld, mit `-e field 2` das Passwortfeld. `-e maxChars 1` prüft, dass die Geste in diesen Feldern kein ganzes Wort einsetzt.
+
+## Lint
+
+`./gradlew :app:lintDebug` prüft neue Fehler weiterhin strikt. Eine gezielte
+Baseline dokumentiert 68 bereits im übernommenen Stand fehlende Übersetzungen
+in den TalkBack-Beschreibungen. Sie enthält ausschließlich diese Fundstellen;
+Warnungen sind nicht ausgeblendet. Details und aktuelle Ergebnisse stehen in
+[PROGRESS.md](PROGRESS.md).

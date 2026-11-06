@@ -27,6 +27,10 @@ oder der ignorierten `local.properties`.
 - Wörterbücher: `python3 tools/generate-swipe-lexicons.py --check`
 - Änderungen: `git diff --check`
 
+`app/lint-baseline.xml` erfasst ausschließlich 68 geerbte fehlende Übersetzungen
+in den TalkBack-Beschreibungen. Neue Lint-Fehler beheben; die Baseline nicht pauschal
+erweitern. Warnungen werden weiterhin gemeldet.
+
 Testergebnisse und offene Aufgaben in `docs/PROGRESS.md` festhalten.
 Gerät, Emulator und lokale Tests getrennt ausweisen.
 

@@ -112,6 +112,8 @@ android {
     namespace = "helium314.keyboard.latin"
     lint {
         abortOnError = true
+        // Existing translation gaps only; new errors and all warnings remain visible.
+        baseline = file("lint-baseline.xml")
     }
 }
 

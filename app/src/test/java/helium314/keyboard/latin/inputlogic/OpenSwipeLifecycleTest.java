@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import android.app.Application;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
@@ -29,9 +30,11 @@ import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 /** Exercises the real lifecycle gate; decoder replies and Android editor boundaries are controlled. */
 @RunWith(RobolectricTestRunner.class)
+@Config(application = Application.class)
 public class OpenSwipeLifecycleTest {
     private final LatinIME ime = mock(LatinIME.class);
     private final LatinIME.UIHandler ui = mock(LatinIME.UIHandler.class);

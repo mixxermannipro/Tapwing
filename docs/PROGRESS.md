@@ -5,6 +5,7 @@ Repository [mixxermannipro/Tapwing](https://github.com/mixxermannipro/Tapwing).
 Der Fortsetzungszweig `chore/cloud-continuation` basiert auf main und integriert
 die bislang getrennten Entwurfs-PRs #2, #4 und #5. main und die bisherigen
 Entwicklungszweige bleiben unverändert. [Analyse aller PRs und Issues](REPOSITORY_STATUS.md).
+Die Fortsetzung liegt in [Entwurfs-PR #6](https://github.com/mixxermannipro/Tapwing/pull/6).
 Eine Übernahme nach main und eine Veröffentlichung stehen aus.
 
 ## Start für Codex Cloud
@@ -64,6 +65,8 @@ Sie ersetzen keinen Gerätecheck mit menschlichen Wischspuren.
 
 ## Bekannte technische Hinweise
 
+- Im aktuellen Robolectric-Gesamtlauf erschienen zwei `NullPointerException`-Meldungen aus dem `UncaughtExceptionHandler` von `DefaultDispatcher-worker`. Die JUnit-Berichte enthalten keine Fehler oder fehlgeschlagenen Tests. Die genaue Ursache dieser Hintergrundmeldungen ist noch nicht isoliert; sie bleiben eine offene Testumgebungsfrage und sind kein Nachweis für einen Gerätefehler. Der neue Lebenszyklustest nutzt bereits einen reinen `Application`-Kontext ohne App-Startarbeit.
+
 - Java 25 auf dem bisherigen Fedora-Rechner hatte keinen Compiler. Das vorhandene vollständige JDK 17 funktioniert. Robolectric mit Android 36 würde Java 21 benötigen. Die lokalen Tests nutzen API 34.
 - Android Gradle Plugin 9.1.1 meldet, dass SDK 37.2 außerhalb seiner getesteten SDK-Version liegt. Der lokale Build läuft. Bei einem späteren Werkzeugwechsel zuerst einen reproduzierbaren Vergleich bauen.
 - Der Emulator startete auf diesem Host mit `-gpu host -feature -Vulkan`. Softwaregrafik und `-gpu off` brachen beim Start ab. Bei gemeldeter Hardwaretastatur musste die Bildschirmtastatur zusätzlich aktiviert werden.
@@ -71,9 +74,28 @@ Sie ersetzen keinen Gerätecheck mit menschlichen Wischspuren.
 
 ## Aktueller Prüflauf
 
-Die Umgebung ist eingerichtet. Ergebnisse des vollständigen Cloud-Prüflaufs
-werden hier nach Abschluss eingetragen. Die früheren Nachweise oben stammen
-vom damaligen Entwicklungsrechner und Emulator.
+Die aktuelle lokale Gradle-Suite erfasst 204 Tests: **199 bestanden, 5 bewusst
+übersprungen, 0 Fehler**. Die fünf bekannten Ausnahmen sind der Hangul-Fall aus
+HeliBoard und vier separat schaltbare URL-Prüfungen. Alle 15 neuen Lebenszyklusfälle
+bestanden. Der reine Testkontext startet hierfür keine App-Hintergrundarbeit.
+
+Der Code-Stand `a584711` bestand außerdem den
+[GitHub-Android-Check](https://github.com/mixxermannipro/Tapwing/actions/runs/42249646850).
+Die unabhängige Prüfung des selbst erstellten Deltas ergab keine Befunde.
+Debug- und unsignierte Release-APK wurden für arm64-v8a, armeabi-v7a, x86 und
+x86_64 gebaut. Die finale Debug-APK enthält nachweislich die neuen Feldprüfungen;
+Signatur und Berechtigungen sind geprüft. Kein INTERNET, RECORD_AUDIO oder READ_CONTACTS.
+Die getrennte IME-Test-App wurde ebenfalls gebaut. APKs und SHA-256-Summen liegen
+lokal unter `/workspace/shared`, nicht in Git.
+
+Der vollständige Lint-Erstlauf fand 68 Fehler: ausschließlich fehlende Übersetzungen
+in der unverändert übernommenen Datei `strings-talkback-descriptions.xml`.
+Diese konkreten Altlasten stehen jetzt in `app/lint-baseline.xml`; es wurden keine
+Übersetzungen vorgetäuscht und keine Prüfungen pauschal abgeschaltet.
+Die 129 Warnungen und ein Hinweis des Erstlaufs bleiben sichtbar.
+Der gezielte Lint-Nachlauf war erfolgreich: 129 Warnungen, 1 Hinweis und exakt
+68 durch die Baseline erfasste Altfehler. Neue Fehler bleiben blockierend.
+Die früheren Gerätenachweise oben stammen vom damaligen Entwicklungsrechner und Emulator.
 
 Der aktive GitHub-Workflow liegt in `.github/workflows/android.yml`.
 `tools/ci/android.yml` ist eine ältere Vorlage; bei CI-Änderungen ist der aktive
