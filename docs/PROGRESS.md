@@ -1,6 +1,6 @@
 # Übergabe für die nächste Sitzung
 
-**Stand 6. November 2026.** Projekt Satzfink, Entwicklungsversion `0.1.0-dev`. Repository [mixxermannipro/openboard](https://github.com/mixxermannipro/openboard). Der erste Entwicklungsstand liegt auf `feat/satzfink-foundation`. Änderungen an `main` und eine Veröffentlichung brauchen die ausdrückliche Freigabe des Nutzers. Den offenen Entwurf findest du über `gh pr list --head feat/satzfink-foundation`.
+**Stand 6. November 2026.** Projekt Satzfink, Entwicklungsversion `0.1.0-dev`. Repository [mixxermannipro/openboard](https://github.com/mixxermannipro/openboard). Der erste Entwicklungsstand liegt auf `feat/satzfink-foundation`. Änderungen an `main` und eine Veröffentlichung brauchen die ausdrückliche Freigabe des Nutzers. Der Stand ist als [Entwurfs-PR #2](https://github.com/mixxermannipro/openboard/pull/2) hochgeladen.
 
 ## Start für Codex Cloud
 
@@ -16,7 +16,7 @@
 - Deutsche, US-englische und UK-englische Wörterbücher und passende Quellwortlisten enthalten. Die drei Binärwörterbücher wurden aus diesen Quellen bytegenau nachgebaut. [Herkunft und Prüfsummen](LICENSES.md)
 - Der Import fremder ausführbarer Gestenbibliotheken, die aktive Gestendatensammlung und die Weiterleitung an eine externe Diktat-Tastatur wurden deaktiviert. Kontaktberechtigung und automatische Android-Sicherung sind entfernt. Zwischenablagevorschläge und Verlauf sind anfangs aus. Der automatische Zugriff prüft geschützte Felder und sensible Clips.
 - Der APK-Inhalt wurde geprüft. Er enthält kein `INTERNET`, `RECORD_AUDIO` oder `READ_CONTACTS`, keine Google-Gestenbibliothek und keine Modellgewichte. Eingabedienst und Rechtschreibprüfung sind durch Android-Berechtigungen geschützt. Die vollständige Sicherheitsprüfung vor einer stabilen Version steht aus.
-- Android 16 im x86_64-Emulator hat die Debug-APK installiert und Satzfink als aktive Tastatur erkannt. Echte Bildschirmtasten haben im getrennten Testprogramm `helo` eingegeben. Die lokale englische Vorschlagsleiste zeigte `helo`, `help`, `hell`. Das ist ein Funktionstest für den Tippweg und die Vorschlagsanzeige. Deutsche Vorschläge, Korrekturqualität, Passwort/PIN auf einem Gerät und der nachträglich angestoßene Flugmodus-Test sind noch offen.
+- Android 16 im x86_64-Emulator hat die Debug-APK installiert und Satzfink als aktive Tastatur erkannt. Echte Bildschirmtasten haben im getrennten Testprogramm `helo` eingegeben. Die lokale englische Vorschlagsleiste zeigte `helo`, `help`, `hell`. Ein weiterer Lauf mit der aktuellen APK und ausgeschaltetem WLAN und Mobilfunk hat `teh` mit der Leertaste zu `the` korrigiert. Die Löschtaste stellte danach `teh` wieder her. Das Passwortfeld öffnete die Tastatur und meldete Androids Passworttyp. Eine vollständige Passwort- und PIN-Prüfung, deutsche Vorschläge und die Korrekturrate sind offen. [Bildschirmfoto](screenshots/android-16-english-suggestions.png)
 - Zwei APKs sind lokal gebaut. Die Debug-APK ist mit dem lokalen Entwicklungsschlüssel signiert. Die Release-APK ist unsigniert. Android-Code ist für arm64-v8a, armeabi-v7a, x86 und x86_64 enthalten. Das sind gebaute Architekturen. Getestet wurde der x86_64-Emulator.
 
 ## Noch offen, in Reihenfolge

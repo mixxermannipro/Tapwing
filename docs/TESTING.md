@@ -25,4 +25,6 @@ adb install /tmp/satzfink-ime-fixture.apk
 adb shell am start -n io.github.mixxermannipro.satzfink.smoke/.FixtureActivity
 ```
 
-Wähle je Feld die Bildschirmtastatur und tippe die Testzeichen über Satzfink. Prüfe Vorschläge, Auswahl, Löschung und Feldwechsel. Für die Geräteabdeckung sind DE-QWERTZ, EN-QWERTY, lange Eingaben, Browser, Nachrichten-App, Tablet und TalkBack offen. [Letzter Prüfnachweis](PROGRESS.md)
+Wähle je Feld die Bildschirmtastatur und tippe die Testzeichen über Satzfink. Prüfe Vorschläge, Auswahl, Löschung und Feldwechsel. EN-QWERTY, Vorschläge und die Rücknahme einer Korrektur wurden in der Test-App auf Android 16 geprüft. DE-QWERTZ, lange Eingaben, Browser, Nachrichten-App, Tablet und TalkBack stehen in der Geräteprüfung noch aus. [Letzter Prüfnachweis](PROGRESS.md)
+
+[Bildschirmfoto der englischen Vorschläge auf dem Android-16-Emulator](screenshots/android-16-english-suggestions.png). Pixel 7, Hochformat, 1080 × 2400, 420 dpi, helles Thema, keine Netzverbindung.

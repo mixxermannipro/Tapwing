@@ -6,7 +6,7 @@ Stand der Entwicklungsfassung. Als Vergleich dienen dokumentierte Funktionen von
 | --- | --- | --- |
 | Tippen, Umschalt, Löschen, Eingabeaktion | Aus HeliBoard übernommen | Gerätetests und unterschiedliche Textfelder |
 | Deutsch QWERTZ, Englisch QWERTY | Vorhanden | Korrekturrate und mehrsprachiges Schreiben messen |
-| Wörterbücher, Vorschläge, Korrektur | Offline vorhanden | DE/EN-Textsammlungen und Rücknahme der Korrektur prüfen |
+| Wörterbücher, Vorschläge, Korrektur | Ein englisches Beispiel im Emulator offline korrigiert und rückgängig gemacht | DE/EN-Textsammlungen und Korrekturrate prüfen |
 | Emoji, Zwischenablage, Tasten und Farben | Vorhanden | Geschützte Felder, TalkBack und Größen prüfen |
 | Einhand, geteilt, schwebend | Übernommene Einstellmöglichkeiten | Auf Telefon, Tablet und Faltgerät prüfen |
 | Gboard-ähnliche Gestaltung | Teilweise, Basis von HeliBoard | Gleich konfigurierte Bildschirmfotos vergleichen |
