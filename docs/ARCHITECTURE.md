@@ -1,6 +1,6 @@
 # Technische Grundlage
 
-**Entscheidung:** HeliBoard 4.2, Quellstand `0c60dffb03a4e2e7a37cb82210f5299f93c03979`. Satzfink übernimmt die native Eingabe und nutzt die eigene Android-Kennung `io.github.mixxermannipro.satzfink`. Die Java-Pakete bleiben vorerst gleich, weil Ressourcen und native Bindungen sie verwenden. [Quellstand](https://github.com/HeliBorg/HeliBoard/tree/0c60dffb03a4e2e7a37cb82210f5299f93c03979)
+**Entscheidung:** HeliBoard 4.2, Quellstand `0c60dffb03a4e2e7a37cb82210f5299f93c03979`. Tapwing übernimmt die native Eingabe und nutzt die eigene Android-Kennung `io.github.mixxermannipro.satzfink`. Die Java-Pakete bleiben vorerst gleich, weil Ressourcen und native Bindungen sie verwenden. [Quellstand](https://github.com/HeliBorg/HeliBoard/tree/0c60dffb03a4e2e7a37cb82210f5299f93c03979)
 
 | Kriterium | HeliBoard 4.2 | LeanType | AOSP LatinIME |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@
 | Lizenz und Wischen | GPL-3.0 mit AOSP-Hinweisen. Offenes Wischen muss ergänzt werden | GPL-3.0 mit AOSP-Hinweisen. Offenes Wischen muss ergänzt werden | Apache-2.0. Offener Wischdecoder fehlt |
 | Aufwand für KI | Getrennt ergänzen, ohne den Tippweg umzubauen | Mehr vorhandener KI-Code, erheblicher Umbau der Sicherheitsgrenzen nötig | Mehr Arbeit vor der KI-Anbindung |
 
-Der unveränderte HeliBoard-Build traf lokal auf das fehlende NDK 28.0. Satzfink verwendet das vorhandene NDK 28.2 und SDK 37.2. LeanType ließ sich für den Vergleich mit einer angepassten NDK-Version bauen. Der zugrunde liegende Quellvergleich steht unter [UPSTREAM_RESEARCH.md](UPSTREAM_RESEARCH.md). Die Tabelle enthält keine gemessenen Leistungswerte.
+Der unveränderte HeliBoard-Build traf lokal auf das fehlende NDK 28.0. Tapwing verwendet das vorhandene NDK 28.2 und SDK 37.2. LeanType ließ sich für den Vergleich mit einer angepassten NDK-Version bauen. Der zugrunde liegende Quellvergleich steht unter [UPSTREAM_RESEARCH.md](UPSTREAM_RESEARCH.md). Die Tabelle enthält keine gemessenen Leistungswerte.
 
 ## Grenzen zwischen Komponenten
 

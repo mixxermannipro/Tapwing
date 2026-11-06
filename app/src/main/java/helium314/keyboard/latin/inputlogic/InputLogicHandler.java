@@ -33,6 +33,8 @@ class InputLogicHandler implements Handler.Callback {
     private boolean mInBatchInput;
     private long mSwipeGeneration;
     private Keyboard mSwipeKeyboardAtStart;
+    private InputConnection mSwipeConnectionAtStart;
+    private EditorInfo mSwipeEditorAtStart;
 
     private static final int MSG_GET_SUGGESTED_WORDS = 1;
 
@@ -66,8 +68,14 @@ class InputLogicHandler implements Handler.Callback {
     // Swipe state belongs to the UI thread. Worker replies are checked after posting back.
     public void onStartBatchInput() {
         cancelSwipe();
-        mSwipeKeyboardAtStart = KeyboardSwitcher.getInstance().getKeyboard();
-        mInBatchInput = mSwipeKeyboardAtStart != null;
+        final Keyboard keyboard = KeyboardSwitcher.getInstance().getKeyboard();
+        final InputConnection connection = mInputLogic.mLatinIME.getCurrentInputConnection();
+        final EditorInfo editor = mInputLogic.mLatinIME.getCurrentInputEditorInfo();
+        if (keyboard == null || connection == null || editor == null) return;
+        mSwipeKeyboardAtStart = keyboard;
+        mSwipeConnectionAtStart = connection;
+        mSwipeEditorAtStart = editor;
+        mInBatchInput = true;
     }
 
     public boolean isInBatchInput() {
@@ -79,6 +87,8 @@ class InputLogicHandler implements Handler.Callback {
         mSwipeGeneration++;
         mSwipeWorker.cancelQueuedWork();
         mSwipeKeyboardAtStart = null;
+        mSwipeConnectionAtStart = null;
+        mSwipeEditorAtStart = null;
         mInBatchInput = false;
     }
 
@@ -95,6 +105,7 @@ class InputLogicHandler implements Handler.Callback {
         final EditorInfo editor = ime.getCurrentInputEditorInfo();
         if (!mInBatchInput || keyboard == null || keyboard != mSwipeKeyboardAtStart
                 || view == null || connection == null || editor == null
+                || connection != mSwipeConnectionAtStart || editor != mSwipeEditorAtStart
                 || cursor < 0 || !mInputLogic.canApplyOpenSwipeAt(cursor)) {
             cancelSwipe();
             return;
@@ -104,6 +115,8 @@ class InputLogicHandler implements Handler.Callback {
             if (generation != mSwipeGeneration) return;
             mInBatchInput = false;
             mSwipeKeyboardAtStart = null;
+            mSwipeConnectionAtStart = null;
+            mSwipeEditorAtStart = null;
             mSwipeGeneration++;
             if (connection != ime.getCurrentInputConnection() || editor != ime.getCurrentInputEditorInfo()
                     || keyboard != switcher.getKeyboard() || view != switcher.getMainKeyboardView()
