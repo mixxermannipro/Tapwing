@@ -116,6 +116,8 @@ internal class DictationSession(private val scope: CoroutineScope) {
         } catch (cancelled: CancellationException) {
             if (isCurrent(run)) cancel()
             throw cancelled
+        } catch (failure: CaptureFailure) {
+            fail(run, failure.reason)
         } catch (_: Exception) {
             fail(run, DictationError.PROVIDER_FAILURE)
         }

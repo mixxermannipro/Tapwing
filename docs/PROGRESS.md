@@ -181,3 +181,33 @@ geprüft. [Datenfluss, Anbieter und Abhängigkeiten](VOICE_SESSION_ADR.md)
   keine Internet- oder Mikrofonberechtigung.
 - **Nächste Stufe:** #8 verbindet die Sitzung mit einer begrenzten Aufnahme
   und dem Android-Lebenszyklus. Die sichere Textübernahme braucht #18 und #32.
+
+## VOICE-02 am 7. November 2026
+
+Der getrennte Aufnahmebaustein liefert begrenzte 16-kHz-PCM-Daten über
+`SpeechInput.CapturedAudio`. Android verwendet dafür `AudioRecord`. Pause,
+Stopp, Abbruch, Berechtigungsentzug und Pufferüberlauf geben die Quelle frei.
+Eine Debug-Testleiste bindet die Aufnahme an das markierte Eingabefeld der
+gleich signierten Test-App. Sie verwirft PCM-Pakete und stoppt bei Wechsel
+des Editors, Ausblenden der Tastatur und Bildschirm-Aus.
+[Aufnahme und offene Geräteprüfung](VOICE_DICTATION.md#aufnahmebaustein-für-voice-02)
+
+- **Lokal:** Debug- und Release-Build, Unit-Tests, Lint und `git diff --check`
+  erfolgreich. 239 Fälle, 234 bestanden, fünf bekannte Ausnahmen. Zwei
+  zusätzliche Tests prüfen die Beschränkung auf das markierte Testfeld.
+  Die Release-APK enthält weder Mikrofon- noch Internetberechtigung.
+- **Emulator:** Android 16. Androids Berechtigung abgelehnt und danach erteilt.
+  Erst ein neuer Tipp startete AudioRecord. Start, Pause, Fortsetzen und
+  Stopp wurden per Android-AppOps geprüft. Wechsel ins Privatfeld,
+  ausgeblendete Tastatur und Bildschirm-Aus beendeten die laufende Aufnahme.
+  Der neue automatisierte Start-Stopp-Test bestand 100 von 100 Zyklen.
+  AppOps bestätigte das Ende des Zugriffs nach jedem Stopp. Die Zeit bis zum
+  ersten PCM-Paket lag im Median bei 83 ms, das 95. Perzentil bei 111 ms.
+  Der Emulator lief mit `-gpu swangle -no-audio`. Nach dem Abgleich mit
+  `main` bei `d2d7579` bestanden erneut 100 von 100 Zyklen (Median 87 ms,
+  95. Perzentil 104 ms) und der Tastatur-Basistest.
+- **Physische Geräte:** Aufnahme, Unterbrechung, Konkurrenz um das Mikrofon,
+  Routing, 100 Start-Stopp-Zyklen und Latenzmessung bleiben offen.
+- **Fortsetzung:** Aufnahme mit einem Spracherkenner und sichtbarer Vorschau
+  verbinden. Die sichere Vorschauübernahme bleibt in #18 und #32. #20 braucht
+  den abgeschlossenen Kernnachweis aus #23.

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <queries>
+        <package android:name="io.github.mixxermannipro.satzfink.smoke" />
+    </queries>
+    <application>
+        <activity android:name="helium314.keyboard.voice.DebugMicrophonePermissionActivity"
+            android:exported="false" />
+    </application>
+</manifest>

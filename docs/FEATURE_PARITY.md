@@ -11,6 +11,6 @@ Stand der Entwicklungsfassung. Als Vergleich dienen dokumentierte Funktionen von
 | Einhand, geteilt, schwebend | Übernommene Einstellmöglichkeiten | Auf Telefon, Tablet und Faltgerät prüfen |
 | Gboard-ähnliche Gestaltung | Teilweise, Basis von HeliBoard | Gleich konfigurierte Bildschirmfotos vergleichen |
 | Offene Wischeingabe | Optional für DE/EN. Wort und Alternativen nach Loslassen | Korpus mit echten Spuren, Geräte und Laufzeit prüfen |
-| Diktat mit Selbstkorrekturen | Schnittstellen und Sitzungslogik mit Testanbietern geprüft | Aufnahme, lokale Spracherkennung, sichtbare Vorschau und sichere Texteingabe |
+| Diktat mit Selbstkorrekturen | Sitzungslogik und separater Aufnahmebaustein mit Testquellen geprüft | Mikrofontaste, Geräteaufnahme, lokale Spracherkennung, sichtbare Vorschau und sichere Texteingabe |
 | KI-Schreibwerkzeuge lokal und mit eigenen Schlüsseln | Offen | Anbietertests, Datenschutz, Abbruch, Texttreue |
 | Proprietäre Gboard-Bestandteile | Ausgeschlossen | Inhalt der APK vor Veröffentlichung erneut prüfen |

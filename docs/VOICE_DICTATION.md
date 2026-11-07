@@ -12,3 +12,78 @@ Das erste Ziel ist wortgetreue lokale Erkennung für Deutsch und Englisch.
 - Nach „Wortgetreu“ folgen „Bereinigt“, „Smart“, „Professionell“, „Übersetzen“ und „Eigene Regeln“. Kein Modus gilt vor Prüfung als unterstützt.
 
 [Android und gemeinsam genutztes Mikrofon](https://developer.android.com/media/platform/sharing-audio-input)
+
+## Aufnahmebaustein für VOICE-02
+
+Der getrennte Aufnahmebaustein liefert PCM-Daten über `SpeechInput.CapturedAudio`.
+Ein Hintergrund-Worker besitzt die Audioquelle. Er öffnet höchstens eine Quelle
+pro Recorder und gibt sie vor der nächsten Aufnahme frei. Pause schließt die
+Quelle. Fortsetzen öffnet sie erneut. Stopp beendet den Audiostrom und lässt
+bereits gepufferte Daten abfließen. Ein Coroutine-Abbruch verwirft die Sitzung.
+
+Der Android-Adapter prüft die Mikrofonberechtigung vor `AudioRecord`. Er
+versucht zuerst 16 kHz und fällt bei fehlender Unterstützung auf 44,1 kHz mit
+Umrechnung zurück. Ein Anruf, eine stummgeschaltete Aufnahme, ein erkannter
+Wechsel der Audioquelle oder ein Lesefehler beendet den Audiostrom. Für reine
+Aufnahme wird kein Wiedergabefokus angefordert. Die Geräteeignung der Umrechnung
+und Erkennung muss gemessen werden.
+[AudioRecord](https://developer.android.com/reference/android/media/AudioRecord)
+
+Der Puffer ist auf 16 Audio-Pakete begrenzt. Bei Überlauf bricht die Aufnahme mit
+einem Fehler ab. Die Vorgabe pro Sitzung sind maximal 120 Sekunden Nutzsignal.
+Anbieter sollen die Pakete ohne stilles Wegwerfen weiterverarbeiten. Audio wird
+im Arbeitsspeicher gehalten.
+
+### Mikrofontest in der Debug-Tastatur
+
+Installiere Tapwing Debug und die separat gebaute Test-App aus
+`tools/ime-smoke/build.sh` mit demselben Debug-Schlüssel. Wähle Tapwing Debug
+und starte die Test-App im Aufnahmemodus.
+
+```sh
+adb shell am start -n io.github.mixxermannipro.satzfink.smoke/.FixtureActivity --ez voiceCapture true
+```
+
+Öffne im Feld „Normal text“ die Tastatur und tippe auf „Mic test“. Beim
+ersten Tipp fragt Android nach der Berechtigung. Nach der Freigabe ist ein
+neuer Tipp erforderlich. Die Testleiste zeigt Start, Pause, Fortsetzen,
+Stopp, Abbruch und die Zeit bis zum ersten PCM-Paket an. Die Pakete werden
+verworfen. Die Testleiste ist auf das markierte Testfeld der gleich
+signierten Test-App begrenzt und verschwindet bei geschützten Feldern.
+Nur die Debug-APK hat eine Mikrofonberechtigung.
+
+Prüfe mit `adb shell cmd appops get io.github.mixxermannipro.satzfink.debug RECORD_AUDIO`,
+ob die Aufnahme läuft. Bei Pause, Stopp, Wechsel ins Privatfeld, Ausblenden
+der Tastatur und Ausschalten des Bildschirms muss der Status „running“ enden.
+
+### Wiederholbare Start-Stopp-Messung
+
+Erteile zuerst die Mikrofonberechtigung wie oben beschrieben. Öffne danach
+einmal die Debug-Tastatur im markierten Testfeld. Führe den Test auf einem
+entsperrten Gerät aus. Bei mehreren Geräten wähle das Ziel mit `adb -s`.
+
+```sh
+adb shell am instrument -r -w -e cycles 100 \
+  io.github.mixxermannipro.satzfink.smoke/.VoiceCaptureInstrumentation
+```
+
+Der Test bedient die Debug-Leiste über Androids Bedienungshilfe. In jedem
+Zyklus wartet er auf das erste PCM-Paket, prüft den laufenden Zugriff über
+AppOps, stoppt die Aufnahme und prüft, ob der Zugriff endet. Er gibt die
+Anzahl bestandener Zyklen, den Median und das 95. Perzentil der Startzeit aus.
+Nur `INSTRUMENTATION_CODE: -1` zählt als bestanden. Es werden keine Aufnahmen
+oder Eingaben exportiert.
+
+Im Android-16-Emulator mit deaktivierter Host-Audioausgabe bestanden
+100 von 100 Zyklen. Das erste PCM-Paket kam im Median nach 83 ms und in
+95 % der Zyklen nach höchstens 111 ms. Diese Werte messen den Emulator.
+
+### Offene Android-Prüfung
+
+- Auf physischen Geräten Berechtigungsverweigerung, Anruf, Mikrofonkonflikt und
+  Wechsel zwischen eingebautem Mikrofon und Headset testen.
+- 100 reale Start-Stopp-Zyklen messen. Pro Zyklus die Zeit vom Tipp bis zur
+  ersten PCM-Probe erfassen. Median, 95. Perzentil, Fehler und Freigabe
+  dokumentieren. Nur Testton verwenden.
+- Für die nutzbare Diktatfunktion Aufnahme mit einem Spracherkenner und einer
+  geprüften Vorschau verbinden. Die sichere Textübernahme bleibt in #18 und #32.
