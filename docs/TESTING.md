@@ -71,6 +71,27 @@ Der Lauf ist bei `INSTRUMENTATION_CODE: -1` und
 `Core IME checks passed` bestanden. Der Befehl kann auch bei fehlgeschlagenem
 Test mit Shell-Status 0 enden.
 
+Der Basistest prüft auch zusammengesetzte Zeichen in der Textmitte. Ein
+Tastendruck entfernt jeweils den Buchstaben mit kombiniertem Akzent und
+das Emoji mit Hautfarbe und Verbindungszeichen vollständig. Die Zeichen
+links und rechts bleiben erhalten.
+
+Ergänze bei Deutsch QWERTZ vor dem Klassennamen `-e longPressExpected ä`.
+Der Test schaltet die Feststelltaste mit einem Doppeltipp auf Umschalt ein
+und prüft zwei Großbuchstaben nacheinander. Anschließend prüft er, ob
+langes Drücken von `a` das erwartete Zeichen einfügt und ob Löschen dieses
+Zeichen wieder entfernt. Die Standard-Tasteneinstellungen sind Voraussetzung.
+
+Der Emoji-Test öffnet die Emoji-Leiste, wählt die Smileys und fügt das erste
+Emoji ein. Danach kehrt er zum Alphabet zurück und löscht das Zeichen mit
+einem Tastendruck. Für das Pixel-7-Emulatorprofil ergänze diese Argumente
+vor dem Klassennamen. Passe die Koordinaten für andere Profile an.
+
+```text
+-e emojiToolbar 352,1418 -e emojiCategory 148,1418
+-e emojiKey 70,1552 -e emojiReturn 80,2170 -e emojiExpected 😀
+```
+
 Auf dem Samsung SM-S938B mit Android 17 (API 37) und 1440 × 3120 Pixeln bei
 600 dpi im Hochformat lief derselbe Test auf Deutsch und Englisch. Nutze dort
 `adb -d shell am instrument`, wenn zugleich ein Emulator läuft.

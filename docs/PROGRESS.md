@@ -145,6 +145,12 @@ Fix und bestand danach.
   Auswahl, Umschalt, Weiter-Aktion, Passwort, PIN, Privatfeld,
   Zeilenumbruch und Wiederöffnung nach App-Hintergrund. Englisch QWERTY
   korrigierte `teh` zu `the `. Die Löschtaste stellte `teh` wieder her.
+  Ein zusätzlicher Lauf mit Deutsch QWERTZ bestätigte die Feststelltaste
+  über zwei Buchstaben sowie Einfügen und Löschen von `ä` per langem
+  Tastendruck. Auch das Einfügen und vollständige Löschen eines Emoji
+  über die Tastaturoberfläche bestand. Der Basistest bestätigte außerdem das
+  Löschen eines Buchstabens mit kombiniertem Akzent und eines mehrteiligen
+  Emoji in der Textmitte. Die Nachbarzeichen blieben erhalten.
 - **Physisches Gerät:** Samsung SM-S938B, Android 17 (API 37), 1440 × 3120 Pixel,
   600 dpi, Hochformat. Getesteter Commit `60692ed`. Beide Läufe mit
   Bildschirmtasten bestanden. Geprüft sind Deutsch QWERTZ, Englisch QWERTY,
@@ -197,7 +203,9 @@ des Editors, Ausblenden der Tastatur und Bildschirm-Aus.
   Der neue automatisierte Start-Stopp-Test bestand 100 von 100 Zyklen.
   AppOps bestätigte das Ende des Zugriffs nach jedem Stopp. Die Zeit bis zum
   ersten PCM-Paket lag im Median bei 83 ms, das 95. Perzentil bei 111 ms.
-  Der Emulator lief mit `-gpu swangle -no-audio`.
+  Der Emulator lief mit `-gpu swangle -no-audio`. Nach dem Abgleich mit
+  `main` bei `d2d7579` bestanden erneut 100 von 100 Zyklen (Median 87 ms,
+  95. Perzentil 104 ms) und der Tastatur-Basistest.
 - **Physische Geräte:** Aufnahme, Unterbrechung, Konkurrenz um das Mikrofon,
   Routing, 100 Start-Stopp-Zyklen und Latenzmessung bleiben offen.
 - **Fortsetzung:** Aufnahme mit einem Spracherkenner und sichtbarer Vorschau
