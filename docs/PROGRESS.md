@@ -147,18 +147,21 @@ geprüft. [Datenfluss, Anbieter und Abhängigkeiten](VOICE_SESSION_ADR.md)
 Der getrennte Aufnahmebaustein liefert begrenzte 16-kHz-PCM-Daten über
 `SpeechInput.CapturedAudio`. Android verwendet dafür `AudioRecord`. Pause,
 Stopp, Abbruch, Berechtigungsentzug und Pufferüberlauf geben die Quelle frei.
-Die Tastatur besitzt in diesem Stand noch keinen Einstieg zur Aufnahme.
+Eine Debug-Testleiste bindet die Aufnahme an das markierte Eingabefeld der
+gleich signierten Test-App. Sie verwirft PCM-Pakete und stoppt bei Wechsel
+des Editors, Ausblenden der Tastatur und Bildschirm-Aus.
 [Aufnahme und offene Geräteprüfung](VOICE_DICTATION.md#aufnahmebaustein-für-voice-02)
 
 - **Lokal:** Debug- und Release-Build, Unit-Tests, Lint und `git diff --check`
-  erfolgreich. 237 Fälle, 232 bestanden und fünf bekannte Ausnahmen.
-  Acht neue Pipeline-Tests enthalten 100 simulierte Aufnahmen bis zum
-  Limit. Drei Robolectric-Fälle prüfen verweigerte Mikrofonberechtigung
-  auf den APIs 29, 33 und 34.
-- **Emulator:** Keine Mikrofonaufnahme geprüft.
+  erfolgreich. 239 Fälle, 234 bestanden, fünf bekannte Ausnahmen. Zwei
+  zusätzliche Tests prüfen die Beschränkung auf das markierte Testfeld.
+  Die Release-APK enthält weder Mikrofon- noch Internetberechtigung.
+- **Emulator:** Android 16. Androids Berechtigung abgelehnt und danach erteilt.
+  Erst ein neuer Tipp startete AudioRecord. Start, Pause, Fortsetzen und
+  Stopp wurden per Android-AppOps geprüft. Wechsel ins Privatfeld,
+  ausgeblendete Tastatur und Bildschirm-Aus beendeten die laufende Aufnahme.
 - **Physische Geräte:** Aufnahme, Unterbrechung, Konkurrenz um das Mikrofon,
   Routing, 100 Start-Stopp-Zyklen und Latenzmessung bleiben offen.
-- **Fortsetzung:** Die IME-Anbindung braucht eine Berechtigungsanfrage nach
-  Nutzertipp, frische Feldprüfung und Abbruch bei Lifecycle-Ereignissen.
-  Die sichere Vorschauübernahme bleibt in #18 und #32. #20 braucht den
-  abgeschlossenen Kernnachweis aus #23.
+- **Fortsetzung:** Aufnahme mit einem Spracherkenner und sichtbarer Vorschau
+  verbinden. Die sichere Vorschauübernahme bleibt in #18 und #32. #20 braucht
+  den abgeschlossenen Kernnachweis aus #23.

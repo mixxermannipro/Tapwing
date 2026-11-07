@@ -88,6 +88,7 @@ import helium314.keyboard.latin.utils.SubtypeSettings;
 import helium314.keyboard.latin.utils.SubtypeState;
 import helium314.keyboard.latin.utils.ToolbarMode;
 import helium314.keyboard.settings.SettingsActivity2;
+import helium314.keyboard.voice.DebugVoiceCapture;
 import kotlin.Unit;
 
 import java.io.FileDescriptor;
@@ -136,6 +137,7 @@ public class LatinIME extends InputMethodService implements
 
     // TODO: Move these {@link View}s to {@link KeyboardSwitcher}.
     private View mInputView;
+    private DebugVoiceCapture mDebugVoiceCapture;
     private InsetsOutlineProvider mInsetsUpdater;
     private SuggestionStripView mSuggestionStripView;
 
@@ -578,6 +580,7 @@ public class LatinIME extends InputMethodService implements
         ContextCompat.registerReceiver(this, mEmojiSearchReceiver, emojiSearchFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         StatsUtils.onCreate(mSettings.getCurrent(), mRichImm);
+        if ("debug".equals(BuildConfig.BUILD_TYPE)) mDebugVoiceCapture = new DebugVoiceCapture(this);
     }
 
     private void loadSettings() {
@@ -689,6 +692,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onDestroy() {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.close();
         mInputLogic.closeOpenSwipeWorker();
         mClipboardHistoryManager.onDestroy();
         mDictionaryFacilitator.closeDictionaries();
@@ -713,6 +717,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onConfigurationChanged(final Configuration conf) {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.cancel();
         SettingsValues settingsValues = mSettings.getCurrent();
         Log.i(TAG, "onConfigurationChanged");
         SubtypeSettings.INSTANCE.reloadSystemLocales(this);
@@ -757,6 +762,7 @@ public class LatinIME extends InputMethodService implements
     public void setInputView(final View view) {
         super.setInputView(view);
         mInputView = view;
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.attach(view);
         mInsetsUpdater = ViewOutlineProviderUtilsKt.setInsetsOutlineProvider(view);
         KtxKt.updateSoftInputWindowLayoutParameters(this, mInputView);
         updateSuggestionStripView(view);
@@ -778,6 +784,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.hide();
         mHandler.onStartInput(editorInfo, restarting);
     }
 
@@ -785,10 +792,12 @@ public class LatinIME extends InputMethodService implements
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
         mHandler.onStartInputView(editorInfo, restarting);
         mStatsUtilsManager.onStartInputView();
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.refresh();
     }
 
     @Override
     public void onFinishInputView(final boolean finishingInput) {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.hide();
         StatsUtils.onFinishInputView();
         mHandler.onFinishInputView(finishingInput);
         mStatsUtilsManager.onFinishInputView();
@@ -797,6 +806,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onFinishInput() {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.hide();
         mHandler.onFinishInput();
     }
 
@@ -817,6 +827,7 @@ public class LatinIME extends InputMethodService implements
 
         if (DebugFlags.DEBUG_ENABLED)
             Log.d(TAG, "switching to subtype " + SettingsSubtype.Companion.toSettingsSubtype(subtype));
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.cancel();
         mSubtypeState.onSubtypeChanged(oldSubtype, subtype);
         StatsUtils.onSubtypeChanged(oldSubtype, subtype);
         mRichImm.onSubtypeChanged(subtype);
@@ -1007,6 +1018,7 @@ public class LatinIME extends InputMethodService implements
     @Override
     public void onWindowShown() {
         super.onWindowShown();
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.refresh();
         if (isInputViewShown()) {
             if (mInputView != null && Settings.getValues().mIsFloatingKeyboard)
                 FloatingKeyboardUtils.setFloating(mInputView);
@@ -1017,6 +1029,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onWindowHidden() {
+        if (mDebugVoiceCapture != null) mDebugVoiceCapture.hide();
         super.onWindowHidden();
         Log.i(TAG, "onWindowHidden");
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
@@ -1204,7 +1217,8 @@ public class LatinIME extends InputMethodService implements
             return;
         }
         final int stripHeight = mKeyboardSwitcher.isShowingStripContainer() ? mKeyboardSwitcher.getStripContainer().getHeight() : 0;
-        int visibleTopY = inputHeight - visibleKeyboardView.getHeight() - stripHeight;
+        final int capturePanelHeight = mDebugVoiceCapture == null ? 0 : mDebugVoiceCapture.visibleHeight();
+        int visibleTopY = inputHeight - visibleKeyboardView.getHeight() - stripHeight - capturePanelHeight;
         if (Settings.getValues().mIsFloatingKeyboard)
             visibleTopY = getResources().getDisplayMetrics().heightPixels;
 

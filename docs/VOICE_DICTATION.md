@@ -32,19 +32,36 @@ und Erkennung muss gemessen werden.
 Der Puffer ist auf 16 Audio-Pakete begrenzt. Bei Überlauf bricht die Aufnahme mit
 einem Fehler ab. Die Vorgabe pro Sitzung sind maximal 120 Sekunden Nutzsignal.
 Anbieter sollen die Pakete ohne stilles Wegwerfen weiterverarbeiten. Audio wird
-im Arbeitsspeicher gehalten. Die App erhält mit diesem Schritt keine zusätzliche
-Berechtigung. Der Aufnahmebaustein ist noch nicht mit der Mikrofontaste verbunden.
+im Arbeitsspeicher gehalten.
+
+### Mikrofontest in der Debug-Tastatur
+
+Installiere Tapwing Debug und die separat gebaute Test-App aus
+`tools/ime-smoke/build.sh` mit demselben Debug-Schlüssel. Wähle Tapwing Debug
+und starte die Test-App im Aufnahmemodus.
+
+```sh
+adb shell am start -n io.github.mixxermannipro.satzfink.smoke/.FixtureActivity --ez voiceCapture true
+```
+
+Öffne im Feld „Normal text“ die Tastatur und tippe auf „Mic test“. Beim
+ersten Tipp fragt Android nach der Berechtigung. Nach der Freigabe ist ein
+neuer Tipp erforderlich. Die Testleiste zeigt Start, Pause, Fortsetzen,
+Stopp, Abbruch und die Zeit bis zum ersten PCM-Paket an. Die Pakete werden
+verworfen. Die Testleiste ist auf das markierte Testfeld der gleich
+signierten Test-App begrenzt und verschwindet bei geschützten Feldern.
+Nur die Debug-APK hat eine Mikrofonberechtigung.
+
+Prüfe mit `adb shell cmd appops get io.github.mixxermannipro.satzfink.debug RECORD_AUDIO`,
+ob die Aufnahme läuft. Bei Pause, Stopp, Wechsel ins Privatfeld, Ausblenden
+der Tastatur und Ausschalten des Bildschirms muss der Status „running“ enden.
 
 ### Offene Android-Prüfung
 
-1. Die Mikrofontaste über einen Controller an sichtbare und zulässige Eingabefelder
-   binden. Beim ersten Tipp die Systemberechtigung anfragen. Nach Rückkehr aus
-   dem Dialog einen neuen Tipp verlangen.
-2. Im Testfeld Start, Pause, Fortsetzen, Stopp und Abbruch prüfen. Beim Wechsel
-   von Feld, App, Bildschirmzustand oder Tastaturansicht sofort abbrechen.
-   Alte Anbieterantworten dürfen kein anderes Feld ändern.
-3. Auf physischen Geräten verweigerte Berechtigung, Anruf, Mikrofonkonflikt und
-   Wechsel zwischen eingebautem Mikrofon und Headset testen.
-4. Auf einem physischen Gerät 100 Start-Stopp-Zyklen fahren. Pro Zyklus die Zeit
-   vom Tipp bis zur ersten gültigen PCM-Probe messen. Median, 95. Perzentil,
-   Fehler und Freigabe der Audioquelle dokumentieren. Nur Testton verwenden.
+- Auf physischen Geräten Berechtigungsverweigerung, Anruf, Mikrofonkonflikt und
+  Wechsel zwischen eingebautem Mikrofon und Headset testen.
+- 100 reale Start-Stopp-Zyklen messen. Pro Zyklus die Zeit vom Tipp bis zur
+  ersten PCM-Probe erfassen. Median, 95. Perzentil, Fehler und Freigabe
+  dokumentieren. Nur Testton verwenden.
+- Für die nutzbare Diktatfunktion Aufnahme mit einem Spracherkenner und einer
+  geprüften Vorschau verbinden. Die sichere Textübernahme bleibt in #18 und #32.
