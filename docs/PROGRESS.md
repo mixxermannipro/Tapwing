@@ -141,3 +141,24 @@ geprüft. [Datenfluss, Anbieter und Abhängigkeiten](VOICE_SESSION_ADR.md)
   keine Internet- oder Mikrofonberechtigung.
 - **Nächste Stufe:** #8 verbindet die Sitzung mit einer begrenzten Aufnahme
   und dem Android-Lebenszyklus. Die sichere Textübernahme braucht #18 und #32.
+
+## VOICE-02 am 7. November 2026
+
+Der getrennte Aufnahmebaustein liefert begrenzte 16-kHz-PCM-Daten über
+`SpeechInput.CapturedAudio`. Android verwendet dafür `AudioRecord`. Pause,
+Stopp, Abbruch, Berechtigungsentzug und Pufferüberlauf geben die Quelle frei.
+Die Tastatur besitzt in diesem Stand noch keinen Einstieg zur Aufnahme.
+[Aufnahme und offene Geräteprüfung](VOICE_DICTATION.md#aufnahmebaustein-für-voice-02)
+
+- **Lokal:** Debug- und Release-Build, Unit-Tests, Lint und `git diff --check`
+  erfolgreich. 237 Fälle, 232 bestanden und fünf bekannte Ausnahmen.
+  Acht neue Pipeline-Tests enthalten 100 simulierte Aufnahmen bis zum
+  Limit. Drei Robolectric-Fälle prüfen verweigerte Mikrofonberechtigung
+  auf den APIs 29, 33 und 34.
+- **Emulator:** Keine Mikrofonaufnahme geprüft.
+- **Physische Geräte:** Aufnahme, Unterbrechung, Konkurrenz um das Mikrofon,
+  Routing, 100 Start-Stopp-Zyklen und Latenzmessung bleiben offen.
+- **Fortsetzung:** Die IME-Anbindung braucht eine Berechtigungsanfrage nach
+  Nutzertipp, frische Feldprüfung und Abbruch bei Lifecycle-Ereignissen.
+  Die sichere Vorschauübernahme bleibt in #18 und #32. #20 braucht den
+  abgeschlossenen Kernnachweis aus #23.
