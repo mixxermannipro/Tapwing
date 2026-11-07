@@ -1,6 +1,9 @@
 # Diktat
 
-Das aktuelle APK enthält kein Diktat. Das erste Ziel ist wortgetreue lokale Erkennung für Deutsch und Englisch.
+Das aktuelle APK bietet noch kein bedienbares Diktat. Die Verträge für
+Spracherkennung, Bereinigung und Vorschau sind mit Testanbietern geprüft.
+Das erste Ziel ist wortgetreue lokale Erkennung für Deutsch und Englisch.
+[Datenfluss und Anbieter](VOICE_SESSION_ADR.md)
 
 - Mikrofon erst nach einem Tipp einschalten. Aufnahme im Speicher begrenzen und bei Abbruch, ausgeblendeter Tastatur oder Feldwechsel stoppen.
 - Ton als Mono-PCM mit 16 kHz an den lokalen Erkenner geben. Status, Dauer und Pegel bleiben in der Tastatur sichtbar.
