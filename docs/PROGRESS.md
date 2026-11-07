@@ -148,7 +148,9 @@ Fix und bestand danach.
   Ein zusätzlicher Lauf mit Deutsch QWERTZ bestätigte die Feststelltaste
   über zwei Buchstaben sowie Einfügen und Löschen von `ä` per langem
   Tastendruck. Auch das Einfügen und vollständige Löschen eines Emoji
-  über die Tastaturoberfläche bestand.
+  über die Tastaturoberfläche bestand. Der Basistest bestätigte außerdem das
+  Löschen eines Buchstabens mit kombiniertem Akzent und eines mehrteiligen
+  Emoji in der Textmitte. Die Nachbarzeichen blieben erhalten.
 - **Physisches Gerät:** Samsung SM-S938B, Android 17 (API 37), 1440 × 3120 Pixel,
   600 dpi, Hochformat. Getesteter Commit `60692ed`. Beide Läufe mit
   Bildschirmtasten bestanden. Geprüft sind Deutsch QWERTZ, Englisch QWERTY,
