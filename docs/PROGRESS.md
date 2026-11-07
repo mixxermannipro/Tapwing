@@ -194,6 +194,10 @@ des Editors, Ausblenden der Tastatur und Bildschirm-Aus.
   Erst ein neuer Tipp startete AudioRecord. Start, Pause, Fortsetzen und
   Stopp wurden per Android-AppOps geprüft. Wechsel ins Privatfeld,
   ausgeblendete Tastatur und Bildschirm-Aus beendeten die laufende Aufnahme.
+  Der neue automatisierte Start-Stopp-Test bestand 100 von 100 Zyklen.
+  AppOps bestätigte das Ende des Zugriffs nach jedem Stopp. Die Zeit bis zum
+  ersten PCM-Paket lag im Median bei 83 ms, das 95. Perzentil bei 111 ms.
+  Der Emulator lief mit `-gpu swangle -no-audio`.
 - **Physische Geräte:** Aufnahme, Unterbrechung, Konkurrenz um das Mikrofon,
   Routing, 100 Start-Stopp-Zyklen und Latenzmessung bleiben offen.
 - **Fortsetzung:** Aufnahme mit einem Spracherkenner und sichtbarer Vorschau

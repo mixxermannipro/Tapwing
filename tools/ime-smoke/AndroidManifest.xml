@@ -11,4 +11,6 @@
         android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
     <instrumentation android:name=".CoreInstrumentation"
         android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
+    <instrumentation android:name=".VoiceCaptureInstrumentation"
+        android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
 </manifest>

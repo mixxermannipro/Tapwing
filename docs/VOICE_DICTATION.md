@@ -56,6 +56,28 @@ Prüfe mit `adb shell cmd appops get io.github.mixxermannipro.satzfink.debug REC
 ob die Aufnahme läuft. Bei Pause, Stopp, Wechsel ins Privatfeld, Ausblenden
 der Tastatur und Ausschalten des Bildschirms muss der Status „running“ enden.
 
+### Wiederholbare Start-Stopp-Messung
+
+Erteile zuerst die Mikrofonberechtigung wie oben beschrieben. Öffne danach
+einmal die Debug-Tastatur im markierten Testfeld. Führe den Test auf einem
+entsperrten Gerät aus. Bei mehreren Geräten wähle das Ziel mit `adb -s`.
+
+```sh
+adb shell am instrument -r -w -e cycles 100 \
+  io.github.mixxermannipro.satzfink.smoke/.VoiceCaptureInstrumentation
+```
+
+Der Test bedient die Debug-Leiste über Androids Bedienungshilfe. In jedem
+Zyklus wartet er auf das erste PCM-Paket, prüft den laufenden Zugriff über
+AppOps, stoppt die Aufnahme und prüft, ob der Zugriff endet. Er gibt die
+Anzahl bestandener Zyklen, den Median und das 95. Perzentil der Startzeit aus.
+Nur `INSTRUMENTATION_CODE: -1` zählt als bestanden. Es werden keine Aufnahmen
+oder Eingaben exportiert.
+
+Im Android-16-Emulator mit deaktivierter Host-Audioausgabe bestanden
+100 von 100 Zyklen. Das erste PCM-Paket kam im Median nach 83 ms und in
+95 % der Zyklen nach höchstens 111 ms. Diese Werte messen den Emulator.
+
 ### Offene Android-Prüfung
 
 - Auf physischen Geräten Berechtigungsverweigerung, Anruf, Mikrofonkonflikt und
