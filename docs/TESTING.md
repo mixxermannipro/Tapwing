@@ -71,6 +71,11 @@ Der Lauf ist bei `INSTRUMENTATION_CODE: -1` und
 `Core IME checks passed` bestanden. Der Befehl kann auch bei fehlgeschlagenem
 Test mit Shell-Status 0 enden.
 
+Der Basistest prüft auch zusammengesetzte Zeichen in der Textmitte. Ein
+Tastendruck entfernt jeweils den Buchstaben mit kombiniertem Akzent und
+das Emoji mit Hautfarbe und Verbindungszeichen vollständig. Die Zeichen
+links und rechts bleiben erhalten.
+
 Ergänze bei Deutsch QWERTZ vor dem Klassennamen `-e longPressExpected ä`.
 Der Test schaltet die Feststelltaste mit einem Doppeltipp auf Umschalt ein
 und prüft zwei Großbuchstaben nacheinander. Anschließend prüft er, ob

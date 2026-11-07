@@ -60,6 +60,16 @@ public final class CoreInstrumentation extends Instrumentation {
             tap("a");
             expect(normal, "aAc", 2, "shift and insert at cursor");
 
+            // These editors report positions in UTF-16 even for multi-code-point characters.
+            String[] graphemes = {"e\u0301", "👩🏽‍💻"};
+            for (String grapheme : graphemes) {
+                int cursor = 1 + grapheme.length();
+                select(normal, "x" + grapheme + "y", cursor, cursor);
+                tap("delete");
+                expect(normal, "xy", 1, "backspace removes a grapheme and preserves both neighbors");
+            }
+            select(normal, "aAc", 2, 2);
+
             EditText privateField = activity.getField(1);
             tap("enter");
             await(privateField::hasFocus, "Next editor action");
