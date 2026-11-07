@@ -121,3 +121,23 @@ Die früheren Gerätenachweise oben stammen vom damaligen Entwicklungsrechner un
 Der aktive GitHub-Workflow liegt in `.github/workflows/android.yml`.
 `tools/ci/android.yml` ist eine ältere Vorlage; bei CI-Änderungen ist der aktive
 Workflow maßgeblich. Für PR #4 und #5 wurde erfolgreicher Android-CI-Status geprüft.
+
+## VOICE-01 am 7. November 2026
+
+Diktatsitzung und Anbieter-Verträge für Erkennung und Bereinigung liegen in
+`helium314.keyboard.voice`. Testanbieter prüfen unter anderem Teilresultate,
+Abbruch, späte Antworten nach Feldwechsel, getrennte Empfängerfreigaben und
+die einmalige Vorschauübernahme. Beim Feldwechsel während eines Zustandswechsels
+wird vor dem Anbieteraufruf beziehungsweise vor der Vorschau-Rückgabe erneut
+geprüft. [Datenfluss, Anbieter und Abhängigkeiten](VOICE_SESSION_ADR.md)
+
+- **Lokal:** Debug- und Release-Build, Unit-Tests und Lint erfolgreich.
+  226 Testfälle, 221 bestanden, fünf bekannte Ausnahmen. Zehn Fälle prüfen
+  die neue Sitzung. Der Gesamtlauf meldete erneut eine Hintergrund-Ausnahme
+  im Robolectric-Worker.
+- **Emulator und physische Geräte:** Diese Stufe hat keine Android-Anbindung.
+  Aufnahme, Spracherkennung und Einfügen werden erst in den folgenden
+  Tickets auf Geräten geprüft. Das Offline-Manifest enthält weiterhin
+  keine Internet- oder Mikrofonberechtigung.
+- **Nächste Stufe:** #8 verbindet die Sitzung mit einer begrenzten Aufnahme
+  und dem Android-Lebenszyklus. Die sichere Textübernahme braucht #18 und #32.
