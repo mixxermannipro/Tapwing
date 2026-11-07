@@ -138,7 +138,8 @@ Fix und bestand danach.
   Neue Kernfälle laufen mit simuliertem Android 10, 13 und 14. Der
   Gesamtlauf meldete erneut eine Hintergrund-Ausnahme im Robolectric-Worker.
   Lint meldete 0 Fehler, 141 Warnungen, einen Hinweis und die 68 bekannten
-  Baseline-Fälle.
+  Baseline-Fälle. Nach Übernahme von VOICE-01 bestanden im kombinierten
+  Stand 234 von 239 Fällen. Die fünf bekannten Ausnahmen bleiben erfasst.
 - **Emulator:** Android 16, x86_64, Pixel 7, offline. Der Lauf bestand mit
   Deutsch QWERTZ und Englisch QWERTY. Bildschirmtasten prüften Cursor und
   Auswahl, Umschalt, Weiter-Aktion, Passwort, PIN, Privatfeld,
@@ -148,3 +149,23 @@ Fix und bestand danach.
   App-Matrix für Android 10, 13 und 16 bleibt offen. Ebenfalls offen sind
   Feststelltaste, langer Tastendruck und Emoji-Eingabe über die Oberfläche
   auf diesen Geräten. [Ablauf und Testmatrix](TESTING.md#kernprüfung-für-core-01)
+
+## VOICE-01 am 7. November 2026
+
+Diktatsitzung und Anbieter-Verträge für Erkennung und Bereinigung liegen in
+`helium314.keyboard.voice`. Testanbieter prüfen unter anderem Teilresultate,
+Abbruch, späte Antworten nach Feldwechsel, getrennte Empfängerfreigaben und
+die einmalige Vorschauübernahme. Beim Feldwechsel während eines Zustandswechsels
+wird vor dem Anbieteraufruf beziehungsweise vor der Vorschau-Rückgabe erneut
+geprüft. [Datenfluss, Anbieter und Abhängigkeiten](VOICE_SESSION_ADR.md)
+
+- **Lokal:** Debug- und Release-Build, Unit-Tests und Lint erfolgreich.
+  226 Testfälle, 221 bestanden, fünf bekannte Ausnahmen. Zehn Fälle prüfen
+  die neue Sitzung. Der Gesamtlauf meldete erneut eine Hintergrund-Ausnahme
+  im Robolectric-Worker.
+- **Emulator und physische Geräte:** Diese Stufe hat keine Android-Anbindung.
+  Aufnahme, Spracherkennung und Einfügen werden erst in den folgenden
+  Tickets auf Geräten geprüft. Das Offline-Manifest enthält weiterhin
+  keine Internet- oder Mikrofonberechtigung.
+- **Nächste Stufe:** #8 verbindet die Sitzung mit einer begrenzten Aufnahme
+  und dem Android-Lebenszyklus. Die sichere Textübernahme braucht #18 und #32.

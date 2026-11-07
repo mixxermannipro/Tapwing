@@ -58,7 +58,9 @@ adb shell am instrument -r -w \
   io.github.mixxermannipro.satzfink.smoke/.CoreInstrumentation
 ```
 
-Wähle zuerst die Tapwing-Debug-Tastatur. Die Beispielkoordinaten gelten für
+Wähle zuerst die Tapwing-Debug-Tastatur. Öffne nach der Installation einmal
+das normale Feld der Test-App und warte, bis die Tastatur sichtbar ist. Starte
+danach den Testbefehl. Die Beispielkoordinaten gelten für
 Deutsch QWERTZ im Android-16-Pixel-7-Emulator mit 1080 × 2400 Pixeln, 420 dpi,
 Standardhöhe, Zahlenreihe und Gestennavigation im Hochformat. Prüfe die
 Tastenmitten nach dem Öffnen für jedes Gerät und passe die Koordinaten an.
