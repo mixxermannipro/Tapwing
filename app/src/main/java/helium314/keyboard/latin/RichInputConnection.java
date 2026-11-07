@@ -230,6 +230,10 @@ public final class RichInputConnection implements PrivateCommandPerformer {
      */
     public boolean resetCachesUponCursorMoveAndReturnSuccess(final int newSelStart,
             final int newSelEnd, final boolean shouldFinishComposition) {
+        // Android may report a selection whose anchor is after its active end.
+        // The text cache and editing operations use the lower and upper bounds.
+        final int selectionStart = Math.min(newSelStart, newSelEnd);
+        final int selectionEnd = Math.max(newSelStart, newSelEnd);
         mComposingText.setLength(0);
         final boolean didReloadTextSuccessfully = reloadTextCache();
         if (!didReloadTextSuccessfully) {
@@ -237,12 +241,12 @@ public final class RichInputConnection implements PrivateCommandPerformer {
             // selection is set to INVALID_CURSOR_POSITION if reloadTextCache return false
             return false;
         }
-        if (mExpectedSelStart != newSelStart || mExpectedSelEnd != newSelEnd) {
-            mExpectedSelStart = newSelStart;
-            mExpectedSelEnd = newSelEnd;
+        if (mExpectedSelStart != selectionStart || mExpectedSelEnd != selectionEnd) {
+            mExpectedSelStart = selectionStart;
+            mExpectedSelEnd = selectionEnd;
             reloadTextCache();
-            if (mExpectedSelStart != newSelStart || mExpectedSelEnd != newSelEnd) {
-                Log.i(TAG, "resetCachesUponCursorMove: tried to set "+newSelStart+"/"+newSelEnd+", but input field has "+mExpectedSelStart+"/"+mExpectedSelEnd);
+            if (mExpectedSelStart != selectionStart || mExpectedSelEnd != selectionEnd) {
+                Log.i(TAG, "resetCachesUponCursorMove: tried to set "+selectionStart+"/"+selectionEnd+", but input field has "+mExpectedSelStart+"/"+mExpectedSelEnd);
             }
         }
         if (isConnected() && shouldFinishComposition) {
@@ -286,8 +290,8 @@ public final class RichInputConnection implements PrivateCommandPerformer {
         if (!isConnected()) return;
         final ExtractedText et = mIC.getExtractedText(new ExtractedTextRequest(), 0);
         if (et == null) return;
-        mExpectedSelStart = et.selectionStart + et.startOffset;
-        mExpectedSelEnd = et.selectionEnd + et.startOffset;
+        mExpectedSelStart = Math.min(et.selectionStart, et.selectionEnd) + et.startOffset;
+        mExpectedSelEnd = Math.max(et.selectionStart, et.selectionEnd) + et.startOffset;
     }
 
     private void checkBatchEdit() {
@@ -975,14 +979,19 @@ public final class RichInputConnection implements PrivateCommandPerformer {
      * this update and not the ones in-between. This is almost impossible to achieve even trying
      * very very hard.
      *
-     * @param oldSelStart The value of the old selection in the update.
-     * @param newSelStart The value of the new selection in the update.
-     * @param oldSelEnd The value of the old selection end in the update.
-     * @param newSelEnd The value of the new selection end in the update.
+     * @param oldAnchor The old selection anchor in the update.
+     * @param newAnchor The new selection anchor in the update.
+     * @param oldActiveEnd The old active selection endpoint in the update.
+     * @param newActiveEnd The new active selection endpoint in the update.
      * @return whether this is a belated expected update or not.
      */
-    public boolean isBelatedExpectedUpdate(final int oldSelStart, final int newSelStart,
-            final int oldSelEnd, final int newSelEnd, final int composingSpanStart, final int composingSpanEnd) {
+    public boolean isBelatedExpectedUpdate(final int oldAnchor, final int newAnchor,
+            final int oldActiveEnd, final int newActiveEnd,
+            final int composingSpanStart, final int composingSpanEnd) {
+        final int oldSelStart = Math.min(oldAnchor, oldActiveEnd);
+        final int oldSelEnd = Math.max(oldAnchor, oldActiveEnd);
+        final int newSelStart = Math.min(newAnchor, newActiveEnd);
+        final int newSelEnd = Math.max(newAnchor, newActiveEnd);
         // This update is "belated" if we are expecting it. That is, mExpectedSelStart and
         // mExpectedSelEnd match the new values that the TextView is updating TO.
         if (mExpectedSelStart == newSelStart && mExpectedSelEnd == newSelEnd) {

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.latin
 
+import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.text.InputType
@@ -35,6 +36,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
@@ -56,7 +59,14 @@ import kotlin.test.assertEquals
     ShadowFacilitator2::class,
 ])
 class InputLogicTest {
-    private val latinIME = Robolectric.setupService(LatinIME::class.java)
+    private val latinIME = run {
+        if (Build.VERSION.SDK_INT < 33) {
+            // Robolectric does not grant the app's merged signature permission automatically.
+            val app = RuntimeEnvironment.getApplication()
+            shadowOf(app).grantPermissions("${app.packageName}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")
+        }
+        Robolectric.setupService(LatinIME::class.java)
+    }
     private val settingsValues get() = Settings.getValues()
     private val inputLogic get() = latinIME.mInputLogic
     private val connection: RichInputConnection get() = inputLogic.mConnection
@@ -324,6 +334,91 @@ class InputLogicTest {
         setText("this is some text")
         setCursorPosition(3, 8)
         assertEquals("s is ", text.substring(3, 8))
+    }
+
+    @Config(sdk = [29, 33, 34])
+    @Test fun replaceSelectionAndDeleteWithoutTouchingNeighbors() {
+        setText("a🌍c")
+        setCursorPosition(1, 3)
+        input('b')
+        assertEquals("abc", text)
+        assertEquals(2, getCursorPosition())
+
+        setCursorPosition(0, 2)
+        functionalKeyPress(KeyCode.DELETE)
+        assertEquals("c", text)
+        assertEquals(0, getCursorPosition())
+    }
+
+    @Config(sdk = [29, 33, 34])
+    @Test fun deleteSelectionReportedInReverseOrder() {
+        setText("a🌍c")
+        setCursorPosition(1, 3)
+        // The editor can report its selection anchor after the active end.
+        connection.resetCachesUponCursorMoveAndReturnSuccess(3, 1, true)
+
+        functionalKeyPress(KeyCode.DELETE)
+        assertEquals("ac", text)
+        assertEquals(1, getCursorPosition())
+    }
+
+    @Test fun collapsingBackwardSelectionMovesCursorBeforeDelete() {
+        setText("abcd")
+        setCursorPosition(1, 3)
+        connection.resetCachesUponCursorMoveAndReturnSuccess(3, 1, true)
+        selectionStart = 2
+        selectionEnd = 2
+
+        latinIME.onUpdateSelection(3, 1, 2, 2, -1, -1)
+        handleMessages()
+        functionalKeyPress(KeyCode.DELETE)
+
+        assertEquals("acd", text)
+        assertEquals(1, getCursorPosition())
+    }
+
+    @Config(sdk = [29, 33, 34])
+    @Test fun switchingToEmptyPasswordFieldDoesNotUndoPreviousCorrection() {
+        setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT)
+        chainInput("hullo")
+        getAutocorrectedWithSpaceAfter("hello", "hullo")
+        assertEquals("hello ", text)
+
+        latinIME.mHandler.onFinishInputView(true)
+        latinIME.mHandler.onFinishInput()
+        currentInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        setText("")
+        functionalKeyPress(KeyCode.DELETE)
+        assertEquals("", text)
+        assertEquals(0, getCursorPosition())
+
+        input('a')
+        assertEquals("a", text)
+        assertEquals("", composingText)
+    }
+
+    @Config(sdk = [29, 33, 34])
+    @Test fun reopeningEditorResumesAtItsReportedCursor() {
+        chainInput("abc")
+        latinIME.mHandler.onFinishInputView(false)
+        handleMessages()
+        assertEquals("abc", text)
+        assertEquals("", composingText)
+
+        selectionStart = 1
+        selectionEnd = 1
+        val editor = EditorInfo().apply {
+            inputType = currentInputType
+            initialSelStart = 1
+            initialSelEnd = 1
+        }
+        latinIME.mHandler.onStartInput(editor, true)
+        latinIME.mHandler.onStartInputView(editor, true)
+        handleMessages()
+
+        input('z')
+        assertEquals("azbc", text)
+        assertEquals(2, getCursorPosition())
     }
 
     @Test fun noComposingForPasswordFields() {
@@ -842,7 +937,7 @@ class InputLogicTest {
         selectionStart = newText.length
         selectionEnd = selectionStart
         composingStart = -1
-        composingStart = -1
+        composingEnd = -1
 
         // we need to start input to notify that something changed
         // restarting is false, so this is seen as a new text field

@@ -122,6 +122,40 @@ Der aktive GitHub-Workflow liegt in `.github/workflows/android.yml`.
 `tools/ci/android.yml` ist eine ältere Vorlage; bei CI-Änderungen ist der aktive
 Workflow maßgeblich. Für PR #4 und #5 wurde erfolgreicher Android-CI-Status geprüft.
 
+## CORE-01 am 7. November 2026
+
+Ausgangsbasis war `60de493` auf `origin/main`. Beim Löschen einer
+rückwärts markierten Auswahl meldete der Editor die Grenzen in umgekehrter
+Reihenfolge. Dadurch verwendete Tapwing eine negative Löschlänge. Die
+Eingabeverbindung ordnet jetzt beide Grenzen auch bei späteren Cursorereignissen.
+Der Android-Test reproduzierte den Löschfehler auf der Basis. Ein zusätzlicher
+Robolectric-Test reproduzierte den Fehler beim Aufheben der Auswahl vor dem
+Fix und bestand danach.
+
+- **Lokal:** Debug- und Release-Build, Unit-Tests, Lint,
+  Wörterbuchprüfung und `git diff --check` erfolgreich. 229 Testfälle,
+  224 bestanden, fünf bekannte Ausnahmen, keine fehlgeschlagenen Fälle.
+  Neue Kernfälle laufen mit simuliertem Android 10, 13 und 14. Der
+  Gesamtlauf meldete erneut eine Hintergrund-Ausnahme im Robolectric-Worker.
+  Lint meldete 0 Fehler, 141 Warnungen, einen Hinweis und die 68 bekannten
+  Baseline-Fälle. Nach Übernahme von VOICE-01 bestanden im kombinierten
+  Stand 234 von 239 Fällen. Die fünf bekannten Ausnahmen bleiben erfasst.
+- **Emulator:** Android 16, x86_64, Pixel 7, offline. Der Lauf bestand mit
+  Deutsch QWERTZ und Englisch QWERTY. Bildschirmtasten prüften Cursor und
+  Auswahl, Umschalt, Weiter-Aktion, Passwort, PIN, Privatfeld,
+  Zeilenumbruch und Wiederöffnung nach App-Hintergrund. Englisch QWERTY
+  korrigierte `teh` zu `the `. Die Löschtaste stellte `teh` wieder her.
+- **Physisches Gerät:** Samsung SM-S938B, Android 17 (API 37), 1440 × 3120 Pixel,
+  600 dpi, Hochformat. Getesteter Commit `60692ed`. Beide Läufe mit
+  Bildschirmtasten bestanden. Geprüft sind Deutsch QWERTZ, Englisch QWERTY,
+  Wechsel zwischen beiden Layouts, Cursor, rückwärts markierte und aufgehobene
+  Auswahl, Umschalt, Weiter, Zeilenumbruch, Passwort, PIN, Privatfeld und
+  Wiederöffnung nach App-Hintergrund. Auch die englische Autokorrektur und
+  Rücknahme bestanden. Der Lauf nutzte die Test-App mit synthetischen Eingaben.
+- **Offen:** Die App-Matrix auf physischen Geräten mit Android 10, 13 und 16
+  sowie Feststelltaste, langer Tastendruck und Emoji-Eingabe über die Oberfläche.
+  [Ablauf und Testmatrix](TESTING.md#kernprüfung-für-core-01)
+
 ## VOICE-01 am 7. November 2026
 
 Diktatsitzung und Anbieter-Verträge für Erkennung und Bereinigung liegen in
