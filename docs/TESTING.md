@@ -71,6 +71,12 @@ Der Lauf ist bei `INSTRUMENTATION_CODE: -1` und
 `Core IME checks passed` bestanden. Der Befehl kann auch bei fehlgeschlagenem
 Test mit Shell-Status 0 enden.
 
+Ergänze bei Deutsch QWERTZ vor dem Klassennamen `-e longPressExpected ä`.
+Der Test schaltet die Feststelltaste mit einem Doppeltipp auf Umschalt ein
+und prüft zwei Großbuchstaben nacheinander. Anschließend prüft er, ob
+langes Drücken von `a` das erwartete Zeichen einfügt und ob Löschen dieses
+Zeichen wieder entfernt. Die Standard-Tasteneinstellungen sind Voraussetzung.
+
 Auf dem Samsung SM-S938B mit Android 17 (API 37) und 1440 × 3120 Pixeln bei
 600 dpi im Hochformat lief derselbe Test auf Deutsch und Englisch. Nutze dort
 `adb -d shell am instrument`, wenn zugleich ein Emulator läuft.

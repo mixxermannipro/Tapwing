@@ -115,6 +115,26 @@ public final class CoreInstrumentation extends Instrumentation {
                 expect(normal, "teh", 3, "undo autocorrect");
             }
 
+            String longPressExpected = arguments.getString("longPressExpected");
+            if (longPressExpected != null) {
+                focusField(0);
+                select(normal, "", 0, 0);
+                tap("shift");
+                SystemClock.sleep(70);
+                tap("shift");
+                tap("a");
+                tap("a");
+                expect(normal, "AA", 2, "Caps Lock keeps uppercase across keypresses");
+
+                tap("shift");
+                select(normal, "", 0, 0);
+                press("a", 900);
+                expect(normal, longPressExpected, longPressExpected.length(),
+                        "long press inserts the default alternative");
+                tap("delete");
+                expect(normal, "", 0, "delete long-press character");
+            }
+
             result.putString("stream", "Core IME checks passed\n");
             finish(Activity.RESULT_OK, result);
         } catch (RuntimeException | AssertionError error) {
@@ -175,12 +195,17 @@ public final class CoreInstrumentation extends Instrumentation {
     }
 
     private void tap(String name) {
+        press(name, 0);
+    }
+
+    private void press(String name, long holdMillis) {
         String[] coordinates = requiredArgument(name).split(",");
         if (coordinates.length != 2) throw new IllegalArgumentException("Expected x,y for " + name);
         float x = Float.parseFloat(coordinates[0]);
         float y = Float.parseFloat(coordinates[1]);
         long downTime = SystemClock.uptimeMillis();
         injectTap(downTime, MotionEvent.ACTION_DOWN, x, y);
+        if (holdMillis > 0) SystemClock.sleep(holdMillis);
         injectTap(downTime, MotionEvent.ACTION_UP, x, y);
     }
 
