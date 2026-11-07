@@ -147,7 +147,8 @@ Fix und bestand danach.
   korrigierte `teh` zu `the `. Die Löschtaste stellte `teh` wieder her.
   Ein zusätzlicher Lauf mit Deutsch QWERTZ bestätigte die Feststelltaste
   über zwei Buchstaben sowie Einfügen und Löschen von `ä` per langem
-  Tastendruck.
+  Tastendruck. Auch das Einfügen und vollständige Löschen eines Emoji
+  über die Tastaturoberfläche bestand.
 - **Physisches Gerät:** Samsung SM-S938B, Android 17 (API 37), 1440 × 3120 Pixel,
   600 dpi, Hochformat. Getesteter Commit `60692ed`. Beide Läufe mit
   Bildschirmtasten bestanden. Geprüft sind Deutsch QWERTZ, Englisch QWERTY,

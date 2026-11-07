@@ -63,6 +63,7 @@ public final class CoreInstrumentation extends Instrumentation {
             EditText privateField = activity.getField(1);
             tap("enter");
             await(privateField::hasFocus, "Next editor action");
+            focusField(1);
             tap("a");
             expect(privateField, "a", 1, "private field");
             expect(normal, "aAc", 2, "original field after focus switch");
@@ -133,6 +134,22 @@ public final class CoreInstrumentation extends Instrumentation {
                         "long press inserts the default alternative");
                 tap("delete");
                 expect(normal, "", 0, "delete long-press character");
+            }
+
+            String emojiExpected = arguments.getString("emojiExpected");
+            if (emojiExpected != null) {
+                focusField(0);
+                select(normal, "", 0, 0);
+                tap("emojiToolbar");
+                SystemClock.sleep(350);
+                tap("emojiCategory");
+                SystemClock.sleep(250);
+                tap("emojiKey");
+                expect(normal, emojiExpected, emojiExpected.length(), "emoji picker inserts emoji");
+                tap("emojiReturn");
+                SystemClock.sleep(350);
+                tap("delete");
+                expect(normal, "", 0, "backspace removes emoji as a whole");
             }
 
             result.putString("stream", "Core IME checks passed\n");
