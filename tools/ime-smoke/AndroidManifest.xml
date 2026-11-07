@@ -9,4 +9,6 @@
     </application>
     <instrumentation android:name=".SwipeInstrumentation"
         android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
+    <instrumentation android:name=".CoreInstrumentation"
+        android:targetPackage="io.github.mixxermannipro.satzfink.smoke"/>
 </manifest>
