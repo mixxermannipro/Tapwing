@@ -63,6 +63,7 @@ public final class CoreInstrumentation extends Instrumentation {
             EditText privateField = activity.getField(1);
             tap("enter");
             await(privateField::hasFocus, "Next editor action");
+            focusField(1);
             tap("a");
             expect(privateField, "a", 1, "private field");
             expect(normal, "aAc", 2, "original field after focus switch");
@@ -113,6 +114,42 @@ public final class CoreInstrumentation extends Instrumentation {
                 expect(normal, "the ", 4, "English autocorrect");
                 tap("delete");
                 expect(normal, "teh", 3, "undo autocorrect");
+            }
+
+            String longPressExpected = arguments.getString("longPressExpected");
+            if (longPressExpected != null) {
+                focusField(0);
+                select(normal, "", 0, 0);
+                tap("shift");
+                SystemClock.sleep(70);
+                tap("shift");
+                tap("a");
+                tap("a");
+                expect(normal, "AA", 2, "Caps Lock keeps uppercase across keypresses");
+
+                tap("shift");
+                select(normal, "", 0, 0);
+                press("a", 900);
+                expect(normal, longPressExpected, longPressExpected.length(),
+                        "long press inserts the default alternative");
+                tap("delete");
+                expect(normal, "", 0, "delete long-press character");
+            }
+
+            String emojiExpected = arguments.getString("emojiExpected");
+            if (emojiExpected != null) {
+                focusField(0);
+                select(normal, "", 0, 0);
+                tap("emojiToolbar");
+                SystemClock.sleep(350);
+                tap("emojiCategory");
+                SystemClock.sleep(250);
+                tap("emojiKey");
+                expect(normal, emojiExpected, emojiExpected.length(), "emoji picker inserts emoji");
+                tap("emojiReturn");
+                SystemClock.sleep(350);
+                tap("delete");
+                expect(normal, "", 0, "backspace removes emoji as a whole");
             }
 
             result.putString("stream", "Core IME checks passed\n");
@@ -175,12 +212,17 @@ public final class CoreInstrumentation extends Instrumentation {
     }
 
     private void tap(String name) {
+        press(name, 0);
+    }
+
+    private void press(String name, long holdMillis) {
         String[] coordinates = requiredArgument(name).split(",");
         if (coordinates.length != 2) throw new IllegalArgumentException("Expected x,y for " + name);
         float x = Float.parseFloat(coordinates[0]);
         float y = Float.parseFloat(coordinates[1]);
         long downTime = SystemClock.uptimeMillis();
         injectTap(downTime, MotionEvent.ACTION_DOWN, x, y);
+        if (holdMillis > 0) SystemClock.sleep(holdMillis);
         injectTap(downTime, MotionEvent.ACTION_UP, x, y);
     }
 
