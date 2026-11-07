@@ -4,8 +4,8 @@ Stand der Entwicklungsfassung. Als Vergleich dienen dokumentierte Funktionen von
 
 | Funktion | Tapwing | Prüfung für Freigabe |
 | --- | --- | --- |
-| Tippen, Umschalt, Löschen, Eingabeaktion | Cursor, Auswahl in beiden Richtungen, Feldwechsel, Umschalt, Weiter und Zeilenumbruch mit Bildschirmtasten auf Android 16 geprüft | App-Matrix auf physischen Geräten, Feststelltaste, langer Tastendruck und Emoji-Eingabe prüfen |
-| Deutsch QWERTZ, Englisch QWERTY | Vorhanden. Layoutposition und englische Autokorrektur im Emulator geprüft | Korrekturrate und mehrsprachiges Schreiben messen |
+| Tippen, Umschalt, Löschen, Eingabeaktion | Cursor, Auswahl in beiden Richtungen, Feldwechsel, Umschalt, Weiter und Zeilenumbruch mit Bildschirmtasten im Android-16-Emulator und auf einem Samsung mit Android 17 geprüft | App-Matrix auf physischen Geräten, Feststelltaste, langer Tastendruck und Emoji-Eingabe prüfen |
+| Deutsch QWERTZ, Englisch QWERTY | Layoutposition und englische Autokorrektur mit Rücknahme im Emulator und auf einem Samsung mit Android 17 geprüft | Korrekturrate und mehrsprachiges Schreiben messen |
 | Wörterbücher, Vorschläge, Korrektur | Ein englisches Beispiel im Emulator offline korrigiert und rückgängig gemacht | DE/EN-Textsammlungen und Korrekturrate prüfen |
 | Emoji, Zwischenablage, Tasten und Farben | Vorhanden | Geschützte Felder, TalkBack und Größen prüfen |
 | Einhand, geteilt, schwebend | Übernommene Einstellmöglichkeiten | Auf Telefon, Tablet und Faltgerät prüfen |

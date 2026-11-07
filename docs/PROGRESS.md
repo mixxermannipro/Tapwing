@@ -145,10 +145,16 @@ Fix und bestand danach.
   Auswahl, Umschalt, Weiter-Aktion, Passwort, PIN, Privatfeld,
   Zeilenumbruch und Wiederöffnung nach App-Hintergrund. Englisch QWERTY
   korrigierte `teh` zu `the `. Die Löschtaste stellte `teh` wieder her.
-- **Physische Geräte:** Kein Gerät war über ADB verbunden. Die Geräte- und
-  App-Matrix für Android 10, 13 und 16 bleibt offen. Ebenfalls offen sind
-  Feststelltaste, langer Tastendruck und Emoji-Eingabe über die Oberfläche
-  auf diesen Geräten. [Ablauf und Testmatrix](TESTING.md#kernprüfung-für-core-01)
+- **Physisches Gerät:** Samsung SM-S938B, Android 17 (API 37), 1440 × 3120 Pixel,
+  600 dpi, Hochformat. Getesteter Commit `60692ed`. Beide Läufe mit
+  Bildschirmtasten bestanden. Geprüft sind Deutsch QWERTZ, Englisch QWERTY,
+  Wechsel zwischen beiden Layouts, Cursor, rückwärts markierte und aufgehobene
+  Auswahl, Umschalt, Weiter, Zeilenumbruch, Passwort, PIN, Privatfeld und
+  Wiederöffnung nach App-Hintergrund. Auch die englische Autokorrektur und
+  Rücknahme bestanden. Der Lauf nutzte die Test-App mit synthetischen Eingaben.
+- **Offen:** Die App-Matrix auf physischen Geräten mit Android 10, 13 und 16
+  sowie Feststelltaste, langer Tastendruck und Emoji-Eingabe über die Oberfläche.
+  [Ablauf und Testmatrix](TESTING.md#kernprüfung-für-core-01)
 
 ## VOICE-01 am 7. November 2026
 

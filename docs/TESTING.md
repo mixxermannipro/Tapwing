@@ -71,6 +71,26 @@ Der Lauf ist bei `INSTRUMENTATION_CODE: -1` und
 `Core IME checks passed` bestanden. Der Befehl kann auch bei fehlgeschlagenem
 Test mit Shell-Status 0 enden.
 
+Auf dem Samsung SM-S938B mit Android 17 (API 37) und 1440 × 3120 Pixeln bei
+600 dpi im Hochformat lief derselbe Test auf Deutsch und Englisch. Nutze dort
+`adb -d shell am instrument`, wenn zugleich ein Emulator läuft.
+Die folgenden Werte ersetzen bei diesem Profil die Beispielkoordinaten oben.
+
+```text
+layoutKey 792,2130
+a 144,2352
+delete 1332,2575
+shift 108,2575
+enter 1332,2796
+passwordA 144,2352
+passwordDelete 1332,2575
+pinOne 199,1940
+t 648,2130
+e 360,2130
+h 864,2352
+space 720,2796
+```
+
 | Umgebung | Eingabe und erwartetes Ergebnis |
 | --- | --- |
 | Messaging und E-Mail-Entwurf | Auf EN-QWERTY `teh` tippen. Leertaste korrigiert zu `the `, Löschen stellt `teh` wieder her. Umschalt und doppelte Umschalt prüfen. Senden nur in einem Testkonto. |
